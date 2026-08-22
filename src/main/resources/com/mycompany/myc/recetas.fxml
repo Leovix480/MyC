@@ -41,7 +41,7 @@
       </AnchorPane>
       <AnchorPane layoutX="255.0" layoutY="188.0" prefHeight="157.0" prefWidth="386.0" style="-fx-border-color: black; -fx-border-width: 3;">
          <children>
-            <TableView fx:id="tablaDI" layoutX="11.0" layoutY="8.0" prefHeight="142.0" prefWidth="200.0">
+            <TableView fx:id="tablaDI" layoutX="11.0" layoutY="8.0" onMouseClicked="#mostrarFilaDI" prefHeight="142.0" prefWidth="200.0">
               <columns>
                 <TableColumn fx:id="columDINombre" prefWidth="111.20001220703125" text="Nombre" />
                 <TableColumn fx:id="columDICantidad" prefWidth="87.19998168945312" text="Cantidad" />

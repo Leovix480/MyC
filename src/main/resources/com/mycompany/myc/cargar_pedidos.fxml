@@ -29,23 +29,23 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField disable="true" promptText="Codigo">
+            <TextField promptText="Codigo">
                <GridPane.margin>
                   <Insets left="35.0" right="35.0" />
                </GridPane.margin>
             </TextField>
-            <ComboBox disable="true" prefHeight="25.0" prefWidth="129.0" promptText="Metodos" GridPane.rowIndex="1">
+            <ComboBox prefHeight="25.0" prefWidth="129.0" promptText="Metodos" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="35.0" />
                </GridPane.margin>
             </ComboBox>
-            <TextField disable="true" promptText="Cliente" GridPane.columnIndex="1" />
-            <TextField disable="true" promptText="Producto" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button disable="true" mnemonicParsing="false" text="Buscar" GridPane.columnIndex="2" />
-            <Button disable="true" mnemonicParsing="false" text="Buscar" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <DatePicker disable="true" editable="true" GridPane.columnIndex="3" />
-            <TextField disable="true" promptText="Cantidad" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <Button disable="true" mnemonicParsing="false" text="Agregar" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <TextField promptText="Cliente" GridPane.columnIndex="1" />
+            <TextField promptText="Producto" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button mnemonicParsing="false" text="Buscar" GridPane.columnIndex="2" />
+            <Button mnemonicParsing="false" text="Buscar" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <DatePicker editable="true" GridPane.columnIndex="3" />
+            <TextField promptText="Cantidad" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Button mnemonicParsing="false" text="Agregar" GridPane.columnIndex="3" GridPane.rowIndex="2" />
          </children>
       </GridPane>
       <TableView layoutY="90.0" prefHeight="201.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
