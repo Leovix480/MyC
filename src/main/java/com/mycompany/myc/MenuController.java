@@ -66,6 +66,7 @@ public class MenuController implements Initializable {
 
     @FXML
     private void abrirPedidos(ActionEvent event) {
+        abrirFxml("cargar_pedidos.fxml","administrar pedidos");
     }
 
     @FXML
