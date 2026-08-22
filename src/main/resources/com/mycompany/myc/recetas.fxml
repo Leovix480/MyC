@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="650.0" style="-fx-border-color: black; -fx-border-width: 4;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.RecetasController">
+   <children>
+      <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="470.0" prefWidth="230.0" style="-fx-border-color: black; -fx-border-width: 3;">
+         <children>
+            <TextField fx:id="txtBuscar" layoutX="12.0" layoutY="14.0" onKeyReleased="#buscar" prefHeight="26.0" prefWidth="205.0" />
+            <TableView fx:id="tablaRecetas" layoutX="15.0" layoutY="52.0" onMouseClicked="#mostrarFila" prefHeight="401.0" prefWidth="200.0">
+              <columns>
+                <TableColumn fx:id="columID" prefWidth="55.99997329711914" text="ID" />
+                <TableColumn fx:id="columNombre" prefWidth="143.20004272460938" text="Nombre" />
+              </columns>
+            </TableView>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="254.0" layoutY="351.0" prefHeight="134.0" prefWidth="386.0" style="-fx-border-color: black; -fx-border-width: 3;">
+         <children>
+            <Label layoutX="33.0" layoutY="37.0" text="Nombre:" />
+            <TextField fx:id="txtNombre" disable="true" layoutX="81.0" layoutY="32.0" prefHeight="26.0" prefWidth="106.0" />
+            <Label layoutX="214.0" layoutY="36.0" text="Precio:" />
+            <TextField fx:id="txtPrecio" disable="true" layoutX="250.0" layoutY="32.0" prefHeight="26.0" prefWidth="106.0" />
+            <Button fx:id="btnAdd" layoutX="12.0" layoutY="84.0" mnemonicParsing="false" onAction="#add" text="Añadir" />
+            <Button fx:id="btnEditar" disable="true" layoutX="88.0" layoutY="84.0" mnemonicParsing="false" onAction="#editar" text="Editar" />
+            <Button fx:id="btnElimnar" disable="true" layoutX="241.0" layoutY="84.0" mnemonicParsing="false" onAction="#eliminar" text="Eliminar" />
+            <Button fx:id="btnGuardar" disable="true" layoutX="161.0" layoutY="84.0" mnemonicParsing="false" onAction="#guardar" text="Guardar" />
+            <Button fx:id="btnCancelar" disable="true" layoutX="319.0" layoutY="84.0" mnemonicParsing="false" onAction="#cancelar" text="Cancelar" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="256.0" layoutY="14.0" prefHeight="169.0" prefWidth="386.0" style="-fx-border-color: black; -fx-border-width: 3;">
+         <children>
+            <Label layoutX="14.0" layoutY="14.0" text="Descripcion:" />
+            <TextField fx:id="txtDesc" disable="true" layoutX="14.0" layoutY="32.0" prefHeight="126.0" prefWidth="362.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="255.0" layoutY="188.0" prefHeight="157.0" prefWidth="386.0" style="-fx-border-color: black; -fx-border-width: 3;">
+         <children>
+            <TableView fx:id="tablaDI" layoutX="11.0" layoutY="8.0" prefHeight="142.0" prefWidth="200.0">
+              <columns>
+                <TableColumn fx:id="columDINombre" prefWidth="111.20001220703125" text="Nombre" />
+                <TableColumn fx:id="columDICantidad" prefWidth="87.19998168945312" text="Cantidad" />
+              </columns>
+            </TableView>
+            <Button fx:id="btnDIAdd" layoutX="271.0" layoutY="33.0" mnemonicParsing="false" onAction="#abrirCIR" text="Añadir" />
+            <Button fx:id="btnDIEliminar" layoutX="271.0" layoutY="90.0" mnemonicParsing="false" onAction="#eliminarIngCant" text="Eliminar" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
