@@ -301,7 +301,7 @@ public class RecetasController implements Initializable {
 
         for (DetalleReceta d : detalles) {
             for (Ingredientes ing : todos) {
-                if (ing.getIdIngredientes() == d.getIdIngrediente()) {
+                if (ing.getIdIngredientes() == d.getIdIngredientes()) {
                     cantidadesDI.put(ing.getIdIngredientes(), String.valueOf(d.getCantUso()));
                     datosDI.add(ing);
                     break;
@@ -336,7 +336,7 @@ public class RecetasController implements Initializable {
         }
         ventasSingleton.getInstance().setCodReceta(id);
         abrirFxml("cargar_ingredientes_receta.fxml", "administrar ingredientes receta");
-        mostrarDI(); // se ejecuta al cerrar el modal (showAndWait bloquea)
+        mostrarDI();
     }
 
     @FXML

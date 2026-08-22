@@ -20,15 +20,15 @@ import java.util.ArrayList;
 public class DetalleReceta extends Conexion implements Sentencias {
 
     private int idReceta;
-    private int idIngrediente;
+    private int idIngredientes;
     private double cantUso;
 
     public DetalleReceta() {
     }
 
-    public DetalleReceta(int idReceta, int idIngrediente, double cantUso) {
+    public DetalleReceta(int idReceta, int idIngredientes, double cantUso) {
         this.idReceta = idReceta;
-        this.idIngrediente = idIngrediente;
+        this.idIngredientes = idIngredientes;
         this.cantUso = cantUso;
     }
 
@@ -40,12 +40,12 @@ public class DetalleReceta extends Conexion implements Sentencias {
         this.idReceta = idReceta;
     }
 
-    public int getIdIngrediente() {
-        return idIngrediente;
+    public int getIdIngredientes() {
+        return idIngredientes;
     }
 
     public void setIdIngrediente(int idIngrediente) {
-        this.idIngrediente = idIngrediente;
+        this.idIngredientes = idIngrediente;
     }
 
     public double getCantUso() {
@@ -58,11 +58,11 @@ public class DetalleReceta extends Conexion implements Sentencias {
 
     @Override
     public boolean insertar() {
-        String sql = "INSERT INTO detalle_receta (idRecetas, idIngrediente, cantUso) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO detalle_receta (idRecetas, idIngredientes, cantUso) VALUES (?, ?, ?)";
         try (Connection con = getCon();
              PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setInt(1, this.idReceta);
-            stm.setInt(2, this.idIngrediente);
+            stm.setInt(2, this.idIngredientes);
             stm.setDouble(3, this.cantUso);
             stm.executeUpdate();
             return true;
@@ -74,12 +74,12 @@ public class DetalleReceta extends Conexion implements Sentencias {
 
     @Override
     public boolean editar() {
-        String sql = "UPDATE detalle_receta SET cantUso=? WHERE idRecetas=? AND idIngrediente=?";
+        String sql = "UPDATE detalle_receta SET cantUso=? WHERE idRecetas=? AND idIngredientes=?";
         try (Connection con = getCon();
              PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setDouble(1, this.cantUso);
             stm.setInt(2, this.idReceta);
-            stm.setInt(3, this.idIngrediente);
+            stm.setInt(3, this.idIngredientes);
             int filas = stm.executeUpdate();
             return filas > 0;
         } catch (SQLException ex) {
@@ -90,11 +90,11 @@ public class DetalleReceta extends Conexion implements Sentencias {
 
     @Override
     public boolean eliminar() {
-        String sql = "DELETE FROM detalle_receta WHERE idRecetas=? AND idIngrediente=?";
+        String sql = "DELETE FROM detalle_receta WHERE idRecetas=? AND idIngredientes=?";
         try (Connection con = getCon();
              PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setInt(1, this.idReceta);
-            stm.setInt(2, this.idIngrediente);
+            stm.setInt(2, this.idIngredientes);
             int filas = stm.executeUpdate();
             return filas > 0;
         } catch (SQLException ex) {
@@ -112,7 +112,7 @@ public class DetalleReceta extends Conexion implements Sentencias {
              ResultSet rs = stm.executeQuery(sql)) {
             while (rs.next()) {
                 int idRec = rs.getInt("idRecetas");
-                int idIng = rs.getInt("idIngrediente");
+                int idIng = rs.getInt("idIngredientes");
                 double cant = rs.getDouble("cantUso");
                 DetalleReceta detalle = new DetalleReceta(idRec, idIng, cant);
                 detalles.add(detalle);
@@ -133,7 +133,7 @@ public class DetalleReceta extends Conexion implements Sentencias {
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
                     int idRec = rs.getInt("idRecetas");
-                    int idIng = rs.getInt("idIngrediente");
+                    int idIng = rs.getInt("idIngredientes");
                     double cant = rs.getDouble("cantUso");
                     detalles.add(new DetalleReceta(idRec, idIng, cant));
                 }

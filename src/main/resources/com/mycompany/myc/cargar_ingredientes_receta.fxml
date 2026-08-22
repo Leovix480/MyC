@@ -11,7 +11,7 @@
 <AnchorPane id="AnchorPane" prefHeight="345.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.Cargar_ingredientes_recetaController">
    <children>
       <TextField fx:id="txtBuscar" layoutX="14.0" layoutY="16.0" onKeyReleased="#buscar" prefHeight="26.0" prefWidth="276.0" />
-      <TableView fx:id="tablaIRecetas" layoutX="14.0" layoutY="52.0" prefHeight="277.0" prefWidth="276.0">
+      <TableView fx:id="tablaIRecetas" layoutX="14.0" layoutY="52.0" onMouseClicked="#mostrarFila" prefHeight="277.0" prefWidth="276.0">
         <columns>
           <TableColumn fx:id="columNombre" prefWidth="158.39996337890625" text="Nombre" />
           <TableColumn fx:id="columCantidad" prefWidth="117.60003662109375" text="Cantidad" />

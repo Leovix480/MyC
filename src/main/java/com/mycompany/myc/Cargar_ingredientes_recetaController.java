@@ -65,7 +65,7 @@ public class Cargar_ingredientes_recetaController implements Initializable {
         cantidadesPorIngrediente.clear();
         ArrayList<DetalleReceta> detalles = detalle.consultaPorReceta(idReceta);
         for (DetalleReceta d : detalles) {
-            cantidadesPorIngrediente.put(d.getIdIngrediente(), String.valueOf(d.getCantUso()));
+            cantidadesPorIngrediente.put(d.getIdIngredientes(), String.valueOf(d.getCantUso()));
         }
 
         columNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -83,7 +83,8 @@ public class Cargar_ingredientes_recetaController implements Initializable {
         btnAdd.setDisable(true);
         btnEditar.setDisable(true);
     }
-
+    
+    @FXML
     private void mostrarFila(MouseEvent event) {
         Ingredientes seleccionado = tablaIRecetas.getSelectionModel().getSelectedItem();
         if (seleccionado == null) {
@@ -91,6 +92,7 @@ public class Cargar_ingredientes_recetaController implements Initializable {
         }
 
         idIngredienteSeleccionado = seleccionado.getIdIngredientes();
+        System.out.println("Ingrediente seleccionado: " + idIngredienteSeleccionado);
         ventasSingleton.getInstance().setCodIngrediente(idIngredienteSeleccionado);
 
         String cant = cantidadesPorIngrediente.getOrDefault(idIngredienteSeleccionado, "");
