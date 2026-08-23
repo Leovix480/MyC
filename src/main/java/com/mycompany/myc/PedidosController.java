@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -74,6 +75,8 @@ public class PedidosController implements Initializable {
     private Button btnImprimir;
     @FXML
     private TextField txtTotal;
+    @FXML
+    private ComboBox<?> cmbTipoPago;
     /**
      * Initializes the controller class.
      */

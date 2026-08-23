@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.Seleccionar_clienteController">
+   <children>
+
+      <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="330.0" prefWidth="472.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
+         <children>
+            <TextField fx:id="txtBuscar" layoutX="12.0" layoutY="12.0" onKeyReleased="#buscar" prefHeight="26.0" prefWidth="448.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6; -fx-text-fill: #5C3A34;" />
+            <TableView fx:id="tablaClientes" layoutX="12.0" layoutY="48.0" onMouseClicked="#mostrarFila" prefHeight="270.0" prefWidth="448.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
+              <columns>
+                <TableColumn fx:id="columID" prefWidth="45.0" text="ID" />
+                <TableColumn fx:id="columNombre" prefWidth="110.0" text="Nombre" />
+                <TableColumn fx:id="columApellido" prefWidth="110.0" text="Apellido" />
+                <TableColumn fx:id="columDireccion" prefWidth="98.0" text="Direccion" />
+                <TableColumn fx:id="columCelular" prefWidth="85.0" text="Celular" />
+              </columns>
+            </TableView>
+         </children>
+      </AnchorPane>
+
+      <Button fx:id="btnAceptar" disable="true" layoutX="390.0" layoutY="356.0" mnemonicParsing="false" onAction="#aceptar" prefHeight="30.0" prefWidth="96.0" text="Aceptar" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" />
+
+   </children>
+</AnchorPane>

@@ -1,74 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="650.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.PedidosController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="780.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.PedidosController">
    <children>
 
       <!-- Panel Cliente -->
-      <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="260.0" prefWidth="230.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
+      <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="300.0" prefWidth="260.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
          <children>
-            <TextField fx:id="txtBuscarCliente" layoutX="12.0" layoutY="12.0" onKeyReleased="#buscarCliente" prefHeight="26.0" prefWidth="206.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6; -fx-text-fill: #5C3A34;" />
-            <TableView fx:id="tablaClientes" layoutX="12.0" layoutY="48.0" onMouseClicked="#mostrarCliente" prefHeight="200.0" prefWidth="206.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
+            <TextField fx:id="txtBuscarCliente" layoutX="12.0" layoutY="12.0" onKeyReleased="#buscarCliente" prefHeight="26.0" prefWidth="236.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6; -fx-text-fill: #5C3A34;" />
+            <TableView fx:id="tablaClientes" layoutX="12.0" layoutY="48.0" onMouseClicked="#mostrarCliente" prefHeight="240.0" prefWidth="236.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
               <columns>
                 <TableColumn fx:id="columClienteID" prefWidth="60.0" text="ID" />
-                <TableColumn fx:id="columClienteNombre" prefWidth="146.0" text="Nombre" />
+                <TableColumn fx:id="columClienteNombre" prefWidth="176.0" text="Nombre" />
               </columns>
             </TableView>
          </children>
       </AnchorPane>
 
       <!-- Panel Datos del pedido -->
-      <AnchorPane layoutX="256.0" layoutY="14.0" prefHeight="260.0" prefWidth="380.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
+      <AnchorPane layoutX="288.0" layoutY="14.0" prefHeight="300.0" prefWidth="478.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
          <children>
             <Label layoutX="14.0" layoutY="14.0" text="Cliente:" style="-fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-            <TextField fx:id="txtNombreCliente" disable="true" layoutX="90.0" layoutY="10.0" prefHeight="26.0" prefWidth="190.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
-            <Button fx:id="btnAddCliente" layoutX="290.0" layoutY="10.0" mnemonicParsing="false" onAction="#addCliente" prefHeight="26.0" prefWidth="76.0" text="Añadir" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <TextField fx:id="txtNombreCliente" disable="true" layoutX="90.0" layoutY="10.0" prefHeight="26.0" prefWidth="270.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
+            <Button fx:id="btnAddCliente" layoutX="372.0" layoutY="10.0" mnemonicParsing="false" onAction="#addCliente" prefHeight="26.0" prefWidth="92.0" text="Añadir" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
 
             <Label layoutX="14.0" layoutY="54.0" text="Producto:" style="-fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-            <TextField fx:id="txtNombreProducto" disable="true" layoutX="90.0" layoutY="50.0" prefHeight="26.0" prefWidth="190.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
-            <Button fx:id="btnAddProducto" layoutX="290.0" layoutY="50.0" mnemonicParsing="false" onAction="#abrirProducto" prefHeight="26.0" prefWidth="76.0" text="Añadir" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <TextField fx:id="txtNombreProducto" disable="true" layoutX="90.0" layoutY="50.0" prefHeight="26.0" prefWidth="270.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
+            <Button fx:id="btnAddProducto" layoutX="372.0" layoutY="50.0" mnemonicParsing="false" onAction="#abrirProducto" prefHeight="26.0" prefWidth="92.0" text="Añadir" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
 
             <Label layoutX="14.0" layoutY="94.0" text="Fecha:" style="-fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-            <DatePicker fx:id="dpFecha" layoutX="90.0" layoutY="90.0" prefHeight="26.0" prefWidth="190.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
+            <DatePicker fx:id="dpFecha" layoutX="90.0" layoutY="90.0" prefHeight="26.0" prefWidth="270.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
 
             <Label layoutX="14.0" layoutY="134.0" text="Cantidad:" style="-fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-            <TextField fx:id="txtCantidad" layoutX="90.0" layoutY="130.0" prefHeight="26.0" prefWidth="190.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
+            <TextField fx:id="txtCantidad" layoutX="90.0" layoutY="130.0" prefHeight="26.0" prefWidth="270.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
 
-            <Button fx:id="btnAgregar" layoutX="130.0" layoutY="180.0" mnemonicParsing="false" onAction="#agregar" prefHeight="32.0" prefWidth="120.0" text="Agregar" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" />
+            <Label layoutX="14.0" layoutY="174.0" text="Pago:" style="-fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <ComboBox fx:id="cmbTipoPago" layoutX="90.0" layoutY="170.0" prefHeight="26.0" prefWidth="270.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
+
+            <Button fx:id="btnAgregar" layoutX="169.0" layoutY="220.0" mnemonicParsing="false" onAction="#agregar" prefHeight="32.0" prefWidth="140.0" text="Agregar" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" />
          </children>
       </AnchorPane>
 
       <!-- Panel Detalle del pedido -->
-      <AnchorPane layoutX="14.0" layoutY="288.0" prefHeight="170.0" prefWidth="622.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
+      <AnchorPane layoutX="14.0" layoutY="328.0" prefHeight="170.0" prefWidth="752.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
          <children>
-            <TableView fx:id="tablaDetalle" layoutX="12.0" layoutY="12.0" prefHeight="146.0" prefWidth="598.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
+            <TableView fx:id="tablaDetalle" layoutX="12.0" layoutY="12.0" prefHeight="146.0" prefWidth="728.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
               <columns>
-                <TableColumn fx:id="columIDProducto" prefWidth="50.0" text="ID" />
-                <TableColumn fx:id="columNombreProducto" prefWidth="200.0" text="Nombre" />
-                <TableColumn fx:id="columCantidadDet" prefWidth="100.0" text="Cantidad" />
-                <TableColumn fx:id="columPrecioDet" prefWidth="120.0" text="Precio" />
-                <TableColumn fx:id="columSubtotalDet" prefWidth="128.0" text="Subtotal" />
+                <TableColumn fx:id="columIDProducto" prefWidth="60.0" text="ID" />
+                <TableColumn fx:id="columNombreProducto" prefWidth="238.0" text="Nombre" />
+                <TableColumn fx:id="columCantidadDet" prefWidth="130.0" text="Cantidad" />
+                <TableColumn fx:id="columPrecioDet" prefWidth="150.0" text="Precio" />
+                <TableColumn fx:id="columSubtotalDet" prefWidth="150.0" text="Subtotal" />
               </columns>
             </TableView>
          </children>
       </AnchorPane>
 
       <!-- Panel Acciones y total -->
-      <AnchorPane layoutX="14.0" layoutY="466.0" prefHeight="80.0" prefWidth="622.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
+      <AnchorPane layoutX="14.0" layoutY="512.0" prefHeight="54.0" prefWidth="752.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
          <children>
-            <Button fx:id="btnGuardar" layoutX="12.0" layoutY="25.0" mnemonicParsing="false" onAction="#guardar" prefHeight="30.0" prefWidth="85.0" text="Guardar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-            <Button fx:id="btnEditar" layoutX="102.0" layoutY="25.0" mnemonicParsing="false" onAction="#editar" prefHeight="30.0" prefWidth="85.0" text="Editar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-            <Button fx:id="btnEliminar" layoutX="192.0" layoutY="25.0" mnemonicParsing="false" onAction="#eliminar" prefHeight="30.0" prefWidth="85.0" text="Eliminar" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" />
-            <Button fx:id="btnCancelar" layoutX="282.0" layoutY="25.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="30.0" prefWidth="85.0" text="Cancelar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-            <Button fx:id="btnImprimir" layoutX="372.0" layoutY="25.0" mnemonicParsing="false" onAction="#imprimir" prefHeight="30.0" prefWidth="85.0" text="Imprimir" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <Button fx:id="btnAdd" layoutX="12.0" layoutY="12.0" mnemonicParsing="false" onAction="#add" prefHeight="30.0" prefWidth="75.0" text="Añadir" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <Button fx:id="btnGuardar" layoutX="95.0" layoutY="12.0" mnemonicParsing="false" onAction="#guardar" prefHeight="30.0" prefWidth="75.0" text="Guardar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <Button fx:id="btnEditar" layoutX="178.0" layoutY="12.0" mnemonicParsing="false" onAction="#editar" prefHeight="30.0" prefWidth="75.0" text="Editar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <Button fx:id="btnEliminar" layoutX="261.0" layoutY="12.0" mnemonicParsing="false" onAction="#eliminar" prefHeight="30.0" prefWidth="75.0" text="Eliminar" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" />
+            <Button fx:id="btnCancelar" layoutX="344.0" layoutY="12.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="30.0" prefWidth="75.0" text="Cancelar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <Button fx:id="btnImprimir" layoutX="427.0" layoutY="12.0" mnemonicParsing="false" onAction="#imprimir" prefHeight="30.0" prefWidth="75.0" text="Imprimir" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
 
-            <Label layoutX="470.0" layoutY="30.0" text="Total:" style="-fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-            <TextField fx:id="txtTotal" disable="true" layoutX="520.0" layoutY="25.0" prefHeight="30.0" prefWidth="90.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <Label layoutX="600.0" layoutY="17.0" text="Total:" style="-fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <TextField fx:id="txtTotal" disable="true" layoutX="644.0" layoutY="12.0" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
          </children>
       </AnchorPane>
 
