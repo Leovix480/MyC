@@ -15,11 +15,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MenuController implements Initializable {
-
 
     @FXML
     private Button btnPedidos;
@@ -31,6 +32,8 @@ public class MenuController implements Initializable {
     private Button btnClientes;
     @FXML
     private Button btnCerrar;
+    @FXML
+    private Label lblAcercaDe;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -77,5 +80,9 @@ public class MenuController implements Initializable {
     @FXML
     private void abrirIngredientes(ActionEvent event) {
         abrirFxml("ingredientes.fxml", "Administrar Ingredientes >:D");
+    }
+
+    @FXML
+    private void abrirManual(MouseEvent event) {
     }
 }
