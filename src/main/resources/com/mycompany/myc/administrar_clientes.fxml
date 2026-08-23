@@ -11,12 +11,12 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="650.0" style="-fx-border-color: #FAA08E; -fx-border-width: 4; -fx-background-color: #FEEBE7;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.Administrar_clientesController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="650.0" style="-fx-border-color: #E8A798; -fx-border-width: 3; -fx-background-color: #FEEBE7;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.Administrar_clientesController">
    <children>
-      <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="222.0" prefWidth="623.0" style="-fx-border-color: #FAA08E; -fx-background-color: #FCC5BA; -fx-border-width: 3;">
+      <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="222.0" prefWidth="623.0" style="-fx-border-color: #E8A798; -fx-background-color: #FFF6F3; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
          <children>
-            <TextField fx:id="txtBuscar" layoutX="14.0" layoutY="14.0" onKeyReleased="#buscar" prefHeight="26.0" prefWidth="598.0" />
-            <TableView fx:id="tablaClientes" layoutX="14.0" layoutY="53.0" onMouseClicked="#mostrarFila" prefHeight="158.0" prefWidth="598.0" style="-fx-background-color: #FEEBE7;">
+            <TextField fx:id="txtBuscar" layoutX="14.0" layoutY="14.0" onKeyReleased="#buscar" prefHeight="26.0" prefWidth="598.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6; -fx-text-fill: #5C3A34;" />
+            <TableView fx:id="tablaClientes" layoutX="14.0" layoutY="53.0" onMouseClicked="#mostrarFila" prefHeight="158.0" prefWidth="598.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
               <columns>
                 <TableColumn fx:id="columID" prefWidth="33.599979400634766" text="ID" />
                 <TableColumn fx:id="columNombre" prefWidth="147.1999855041504" text="Nombre" />
@@ -27,7 +27,7 @@
             </TableView>
          </children>
       </AnchorPane>
-      <GridPane layoutX="17.0" layoutY="247.0" prefHeight="235.0" prefWidth="618.0" style="-fx-border-color: #FAA08E; -fx-background-color: #FCC5BA; -fx-border-width: 3;">
+      <GridPane layoutX="17.0" layoutY="247.0" prefHeight="235.0" prefWidth="618.0" style="-fx-border-color: #E8A798; -fx-background-color: #FFF6F3; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -42,23 +42,23 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#add" style="-fx-background-color: #FEEBE7; -fx-border-color: #FCC5BA; -fx-border-width: 2;" text="Añadir" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-            <Label text="Nombre:">
+            <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#add" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Añadir" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Label text="Nombre:" style="-fx-text-fill: #5C3A34;">
                <padding>
                   <Insets left="9.0" />
                </padding>
             </Label>
-            <Label text="Apellido:" GridPane.rowIndex="1">
+            <Label text="Apellido:" style="-fx-text-fill: #5C3A34;" GridPane.rowIndex="1">
                <padding>
                   <Insets left="9.0" />
                </padding>
             </Label>
-            <Label text="Direccion:" GridPane.columnIndex="3">
+            <Label text="Direccion:" style="-fx-text-fill: #5C3A34;" GridPane.columnIndex="3">
                <padding>
                   <Insets left="9.0" />
                </padding>
             </Label>
-            <Label text="Celular:" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <Label text="Celular:" style="-fx-text-fill: #5C3A34;" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
@@ -66,20 +66,20 @@
                   <Insets left="9.0" />
                </padding>
             </Label>
-            <Label text="ID:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <Label text="ID:" style="-fx-text-fill: #5C3A34;" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <padding>
                   <Insets left="9.0" />
                </padding>
             </Label>
-            <TextField fx:id="txtNombre" disable="true" GridPane.columnIndex="1" />
-            <TextField fx:id="txtDireccion" disable="true" GridPane.columnIndex="4" />
-            <TextField fx:id="txtApellido" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="txtCelular" disable="true" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-            <TextField fx:id="txtID" disable="true" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <Button fx:id="btnEditar" disable="true" layoutX="13.0" layoutY="199.0" mnemonicParsing="false" onAction="#editar" style="-fx-background-color: #FEEBE7; -fx-border-color: #FCC5BA; -fx-border-width: 2;" text="Editar" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-            <Button fx:id="btnEliminar" disable="true" layoutX="166.0" layoutY="199.0" mnemonicParsing="false" onAction="#eliminar" style="-fx-background-color: #FEEBE7; -fx-border-color: #FCC5BA; -fx-border-width: 2;" text="Eliminar" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-            <Button fx:id="btnCancelar" disable="true" layoutX="166.0" layoutY="199.0" mnemonicParsing="false" onAction="#cancelar" style="-fx-background-color: #FEEBE7; -fx-border-color: #FCC5BA; -fx-border-width: 2;" text="Cancelar" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-            <Button fx:id="btnGuardar" disable="true" mnemonicParsing="false" onAction="#guardar" style="-fx-background-color: #FEEBE7; -fx-border-color: #FCC5BA; -fx-border-width: 2;" text="Guardar" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <TextField fx:id="txtNombre" disable="true" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" GridPane.columnIndex="1" />
+            <TextField fx:id="txtDireccion" disable="true" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" GridPane.columnIndex="4" />
+            <TextField fx:id="txtApellido" disable="true" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="txtCelular" disable="true" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <TextField fx:id="txtID" disable="true" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Button fx:id="btnEditar" disable="true" layoutX="13.0" layoutY="199.0" mnemonicParsing="false" onAction="#editar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Editar" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Button fx:id="btnEliminar" disable="true" layoutX="166.0" layoutY="199.0" mnemonicParsing="false" onAction="#eliminar" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" text="Eliminar" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Button fx:id="btnCancelar" disable="true" layoutX="166.0" layoutY="199.0" mnemonicParsing="false" onAction="#cancelar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Cancelar" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Button fx:id="btnGuardar" disable="true" mnemonicParsing="false" onAction="#guardar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Guardar" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>

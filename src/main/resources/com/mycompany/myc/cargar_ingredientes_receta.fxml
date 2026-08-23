@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -7,24 +6,36 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
-<AnchorPane id="AnchorPane" prefHeight="345.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.Cargar_ingredientes_recetaController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="345.0" prefWidth="480.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.Cargar_ingredientes_recetaController">
    <children>
-      <TextField fx:id="txtBuscar" layoutX="14.0" layoutY="16.0" onKeyReleased="#buscar" prefHeight="26.0" prefWidth="276.0" />
-      <TableView fx:id="tablaIRecetas" layoutX="14.0" layoutY="52.0" onMouseClicked="#mostrarFila" prefHeight="277.0" prefWidth="276.0">
-        <columns>
-          <TableColumn fx:id="columNombre" prefWidth="158.39996337890625" text="Nombre" />
-          <TableColumn fx:id="columCantidad" prefWidth="117.60003662109375" text="Cantidad" />
-        </columns>
-      </TableView>
-      <Label layoutX="309.0" layoutY="52.0" text="Cantidad a usar:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <TextField fx:id="txtCantidad" layoutX="309.0" layoutY="86.0" />
-      <Button fx:id="btnAdd" layoutX="358.0" layoutY="165.0" mnemonicParsing="false" onAction="#add" text="Añadir" />
-      <Button fx:id="btnAceptar" layoutX="355.0" layoutY="287.0" mnemonicParsing="false" onAction="#aceptar" text="Aceptar" />
-      <Button fx:id="btnEditar" layoutX="358.0" layoutY="225.0" mnemonicParsing="false" onAction="#editar" text="Editar" />
+
+      <!-- Panel de búsqueda y tabla -->
+      <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="317.0" prefWidth="290.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
+         <children>
+            <TextField fx:id="txtBuscar" layoutX="12.0" layoutY="12.0" onKeyReleased="#buscar" prefHeight="26.0" prefWidth="266.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6; -fx-text-fill: #5C3A34;" />
+            <TableView fx:id="tablaIRecetas" layoutX="12.0" layoutY="48.0" onMouseClicked="#mostrarFila" prefHeight="257.0" prefWidth="266.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
+              <columns>
+                <TableColumn fx:id="columNombre" prefWidth="158.39996337890625" text="Nombre" />
+                <TableColumn fx:id="columCantidad" prefWidth="107.60003662109375" text="Cantidad" />
+              </columns>
+            </TableView>
+         </children>
+      </AnchorPane>
+
+      <!-- Panel de controles -->
+      <AnchorPane layoutX="316.0" layoutY="14.0" prefHeight="317.0" prefWidth="150.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
+         <children>
+            <Label layoutX="12.0" layoutY="14.0" text="Cantidad a usar:" style="-fx-text-fill: #5C3A34; -fx-font-weight: bold;">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtCantidad" layoutX="12.0" layoutY="44.0" prefWidth="126.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
+            <Button fx:id="btnAdd" layoutX="12.0" layoutY="86.0" mnemonicParsing="false" onAction="#add" prefWidth="126.0" text="Añadir" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <Button fx:id="btnEditar" layoutX="12.0" layoutY="126.0" mnemonicParsing="false" onAction="#editar" prefWidth="126.0" text="Editar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <Button fx:id="btnAceptar" layoutX="12.0" layoutY="279.0" mnemonicParsing="false" onAction="#aceptar" prefWidth="126.0" text="Aceptar" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" />
+         </children>
+      </AnchorPane>
+
    </children>
 </AnchorPane>

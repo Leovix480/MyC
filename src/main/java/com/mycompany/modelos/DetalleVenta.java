@@ -13,10 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-/**
- *
- * @author valin
- */
 public class DetalleVenta extends Conexion implements Sentencias {
 
     private int idVenta;
