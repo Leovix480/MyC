@@ -17,6 +17,7 @@ public class MyC extends Application{
         launch();
     }
     
+    //hola leo
     @Override
     public void start(Stage stage) throws Exception {
         Conexion conectar= new Conexion();
