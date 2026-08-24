@@ -30,6 +30,7 @@ import com.mycompany.modelos.Ingredientes;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.Cursor;
 
 public class RecetasController implements Initializable {
 
@@ -82,6 +83,13 @@ public class RecetasController implements Initializable {
     //No anda (TODAVIA >:D)
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        btnEditar.setCursor(Cursor.HAND);
+        btnElimnar.setCursor(Cursor.HAND);
+        btnCancelar.setCursor(Cursor.HAND);
+        btnGuardar.setCursor(Cursor.HAND);
+        btnAdd.setCursor(Cursor.HAND);
+        btnDIEliminar.setCursor(Cursor.HAND);
+        btnDIAdd.setCursor(Cursor.HAND);
         mostrarDatos();
     }
  

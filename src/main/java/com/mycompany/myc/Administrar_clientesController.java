@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -68,6 +69,11 @@ public class Administrar_clientesController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        btnEditar.setCursor(Cursor.HAND);
+        btnEliminar.setCursor(Cursor.HAND);
+        btnCancelar.setCursor(Cursor.HAND);
+        btnGuardar.setCursor(Cursor.HAND);
+        btnAdd.setCursor(Cursor.HAND);
         mostrarDatos();
     }    
     

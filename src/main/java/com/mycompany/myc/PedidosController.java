@@ -23,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -119,6 +120,17 @@ public class PedidosController implements Initializable {
         configurarColumnasDetalle();
         mostrarVentas();
         limpiarVentaActual();
+        
+        btnEditar.setCursor(Cursor.HAND);
+        btnEliminar.setCursor(Cursor.HAND);
+        btnCancelar.setCursor(Cursor.HAND);
+        btnGuardar.setCursor(Cursor.HAND);
+        btnAdd.setCursor(Cursor.HAND);
+        btnAddCliente.setCursor(Cursor.HAND);
+        btnAddProducto.setCursor(Cursor.HAND);
+        btnAgregar.setCursor(Cursor.HAND);
+        btnImprimir.setCursor(Cursor.HAND);
+        
     }
 
     // ---------- Tabla superior (ventas realizadas) ----------

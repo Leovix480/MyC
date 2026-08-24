@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -42,6 +43,7 @@ public class Seleccionar_productoController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        btnAceptar.setCursor(Cursor.HAND);
         mostrarDatos();
     }
 
