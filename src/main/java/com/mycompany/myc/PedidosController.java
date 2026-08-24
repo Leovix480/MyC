@@ -78,6 +78,8 @@ public class PedidosController implements Initializable {
     @FXML
     private TableColumn<Productos, String> columSubtotalDet;
     @FXML
+    private Button btnAdd;
+    @FXML
     private Button btnGuardar;
     @FXML
     private Button btnEditar;
@@ -91,8 +93,6 @@ public class PedidosController implements Initializable {
     private TextField txtTotal;
     @FXML
     private ComboBox<String> cmbTipoPago;
-    @FXML
-    private Button btnAdd;
 
     Clientes cliente = new Clientes();
     Productos productoModelo = new Productos();
@@ -200,22 +200,30 @@ public class PedidosController implements Initializable {
         cmbTipoPago.setDisable(true);
         txtCantidad.setDisable(true);
         btnAddCliente.setDisable(true);
+        btnAddProducto.setDisable(true);
         btnAgregar.setDisable(true);
         btnEditar.setDisable(true);
         btnEliminar.setDisable(true);
         btnGuardar.setDisable(true);
         btnCancelar.setDisable(true);
-        btnAddProducto.setDisable(false);
+        btnAdd.setDisable(false);
         btnImprimir.setDisable(false);
     }
 
     private Clientes buscarClientePorId(int idCliente) {
-        for (Clientes c : cliente.consulta()) {
+        ArrayList<Clientes> todos = cliente.consulta();
+        for (Clientes c : todos) {
             if (c.getIdCliente() == idCliente) {
                 return c;
             }
         }
         return null;
+    }
+
+    // ---------- Botón "Añadir" del panel inferior: vuelve a un pedido nuevo ----------
+    @FXML
+    private void add(ActionEvent event) {
+        limpiarVentaActual();
     }
 
     // ---------- Agregar cliente ----------
@@ -224,7 +232,7 @@ public class PedidosController implements Initializable {
         if (modoSoloLectura) {
             return;
         }
-        abrirFxml("Seleccionar_cliente.fxml", "Seleccionar cliente");
+        abrirFxml("agregar_clientes.fxml", "Seleccionar cliente");
 
         int idSel = ventasSingleton.getInstance().getCodCliente();
         if (idSel > 0) {
@@ -242,7 +250,7 @@ public class PedidosController implements Initializable {
         if (modoSoloLectura) {
             return;
         }
-        abrirFxml("Seleccionar_producto.fxml", "Seleccionar producto");
+        abrirFxml("agregar_producto.fxml", "Seleccionar producto");
 
         int idSel = ventasSingleton.getInstance().getCodProducto();
         if (idSel > 0) {
@@ -549,12 +557,12 @@ public class PedidosController implements Initializable {
         cmbTipoPago.setDisable(false);
         txtCantidad.setDisable(false);
         btnAddCliente.setDisable(false);
+        btnAddProducto.setDisable(false);
         btnAgregar.setDisable(false);
         btnEditar.setDisable(false);
         btnEliminar.setDisable(false);
         btnGuardar.setDisable(false);
         btnCancelar.setDisable(false);
-        btnAddProducto.setDisable(false);
 
         tablaDetalle.refresh();
         actualizarTotal();
@@ -584,6 +592,5 @@ public class PedidosController implements Initializable {
 
     @FXML
     private void imprimir(ActionEvent event) {
-        // Fuera de alcance por ahora, según lo pedido.
     }
 }

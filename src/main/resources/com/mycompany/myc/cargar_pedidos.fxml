@@ -50,7 +50,7 @@
       <!-- Panel Detalle del pedido -->
       <AnchorPane layoutX="14.0" layoutY="328.0" prefHeight="170.0" prefWidth="752.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
          <children>
-            <TableView fx:id="tablaDetalle" layoutX="12.0" layoutY="12.0" prefHeight="146.0" prefWidth="728.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
+            <TableView fx:id="tablaDetalle" layoutX="12.0" layoutY="12.0" onMouseClicked="#mostrarFilaDetalle" prefHeight="146.0" prefWidth="728.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
               <columns>
                 <TableColumn fx:id="columIDProducto" prefWidth="60.0" text="ID" />
                 <TableColumn fx:id="columNombreProducto" prefWidth="238.0" text="Nombre" />

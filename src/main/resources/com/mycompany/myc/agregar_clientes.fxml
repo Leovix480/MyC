@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.Seleccionar_clienteController">
    <children>
 
@@ -22,7 +24,7 @@
          </children>
       </AnchorPane>
 
-      <Button fx:id="btnAceptar" disable="true" layoutX="390.0" layoutY="356.0" mnemonicParsing="false" onAction="#aceptar" prefHeight="30.0" prefWidth="96.0" text="Aceptar" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" />
+      <Button fx:id="btnAceptar" layoutX="390.0" layoutY="356.0" mnemonicParsing="false" onAction="#aceptar" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" text="Aceptar" />
 
    </children>
 </AnchorPane>
