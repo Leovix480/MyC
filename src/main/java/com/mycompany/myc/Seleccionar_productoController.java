@@ -1,62 +1,87 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package com.mycompany.myc;
 
+import com.mycompany.modelos.Productos;
+import com.mycompany.myc.clases.ventasSingleton;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-/**
- * FXML Controller class
- *
- * @author valin
- */
-public class Seleccionar_productoController implements Initializable {
+import javafx.stage.Stage;
 
+public class Seleccionar_productoController implements Initializable {
 
     @FXML
     private AnchorPane root;
     @FXML
     private TextField txtBuscar;
     @FXML
-    private TableView<?> tablaProductos;
+    private TableView<Productos> tablaProductos;
     @FXML
-    private TableColumn<?, ?> columID;
+    private TableColumn<Productos, Integer> columID;
     @FXML
-    private TableColumn<?, ?> columNombre;
+    private TableColumn<Productos, String> columNombre;
     @FXML
-    private TableColumn<?, ?> columPrecio;
+    private TableColumn<Productos, Double> columPrecio;
     @FXML
     private Button btnAceptar;
-    /**
-     * Initializes the controller class.
-     */
+
+    ObservableList<Productos> datos;
+    ObservableList<Productos> datosBuscados;
+    Productos producto = new Productos();
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+        mostrarDatos();
+    }
+
+    public void mostrarDatos() {
+        datos = FXCollections.observableArrayList(producto.consulta());
+        columID.setCellValueFactory(new PropertyValueFactory<>("idProducto"));
+        columNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        columPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
+        tablaProductos.setItems(datos);
+    }
+
     @FXML
     private void buscar(KeyEvent event) {
+        datosBuscados = FXCollections.observableArrayList();
+        String buscar = txtBuscar.getText();
+        if (buscar.isEmpty()) {
+            tablaProductos.setItems(datos);
+        } else {
+            datosBuscados.clear();
+            for (Productos p : datos) {
+                if (p.getNombre().toLowerCase().contains(buscar.toLowerCase())) {
+                    datosBuscados.add(p);
+                }
+            }
+            tablaProductos.setItems(datosBuscados);
+        }
     }
 
     @FXML
     private void mostrarFila(MouseEvent event) {
+        Productos seleccionado = tablaProductos.getSelectionModel().getSelectedItem();
+        if (seleccionado == null) {
+            return;
+        }
+        ventasSingleton.getInstance().setCodProducto(seleccionado.getIdProducto());
     }
 
     @FXML
     private void aceptar(ActionEvent event) {
+        Stage stage = (Stage) btnAceptar.getScene().getWindow();
+        stage.close();
     }
-
 }

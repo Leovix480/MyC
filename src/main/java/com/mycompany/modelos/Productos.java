@@ -152,5 +152,23 @@ public class Productos extends Conexion implements Sentencias {
         System.getLogger(Productos.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
     }
     return null;
-}
+    }
+    public Productos consultaPorId(int idProducto) {
+        String sql = "SELECT * FROM producto WHERE idProducto=?";
+        try (Connection con = getCon(); PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setInt(1, idProducto);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    int idProd = rs.getInt("idProducto");
+                    String nom = rs.getString("nombre");
+                    double prec = rs.getDouble("precio");
+                    int idRec = rs.getInt("idRecetas");
+                    return new Productos(idProd, nom, prec, idRec);
+                }
+            }
+        } catch (SQLException ex) {
+            System.getLogger(Productos.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        return null;
+    }
 }

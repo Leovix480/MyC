@@ -128,7 +128,7 @@ public class Clientes extends Conexion implements Sentencias{
     }
 
     @Override
-    public ArrayList consulta() {
+    public ArrayList<Clientes> consulta() {
         ArrayList<Clientes> cliente = new ArrayList<>();
         String sql = "select * from cliente";
         try (

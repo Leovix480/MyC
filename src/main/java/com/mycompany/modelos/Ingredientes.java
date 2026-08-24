@@ -114,6 +114,26 @@ public class Ingredientes extends Conexion implements Sentencias{
         }
         return ingrediente;
     }
+    
+    public Ingredientes consultaPorId(int idIngredientes) {
+        String sql = "SELECT * FROM ingredientes WHERE idIngredientes=?";
+        try (Connection con = getCon(); PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setInt(1, idIngredientes);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    int cod = rs.getInt("idIngredientes");
+                    String nom = rs.getString("nombre");
+                    double pre = rs.getDouble("precioIngredientes");
+                    int si = rs.getInt("stockIngredientes");
+                    int sim = rs.getInt("stockMinimo");
+                    return new Ingredientes(cod, nom, pre, si, sim);
+                }
+            }
+        } catch (SQLException ex) {
+            System.getLogger(Ingredientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        return null;
+    }
 
     public String getNombre() {
         return nombre;
