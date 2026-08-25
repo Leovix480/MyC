@@ -8,5 +8,5 @@ module com.mycompany.myc {
     opens com.mycompany.myc to javafx.fxml;
     exports com.mycompany.myc;
     //exports com.mycompany.myc.modelos;
-    //requires jasperreports;
+    requires jasperreports;
 }

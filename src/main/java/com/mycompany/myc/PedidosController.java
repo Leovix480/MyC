@@ -132,8 +132,42 @@ public class PedidosController implements Initializable {
         btnAgregar.setCursor(Cursor.HAND);
         btnImprimir.setCursor(Cursor.HAND);
         
+        deshabilitar();
     }
 
+    public void habilitar() {
+        btnGuardar.setDisable(false);
+        btnCancelar.setDisable(false);
+        btnEditar.setDisable(false);
+        btnEliminar.setDisable(false);
+        btnAddCliente.setDisable(false);
+        btnAddProducto.setDisable(false);
+        btnAgregar.setDisable(false);
+        txtBuscarCliente.setDisable(false);
+        txtCantidad.setDisable(false);
+        dpFecha.setDisable(false);
+        cmbTipoPago.setDisable(false);
+    }
+    
+    public void deshabilitar() {
+        btnGuardar.setDisable(true);
+        btnCancelar.setDisable(true);
+        btnEditar.setDisable(true);
+        btnEliminar.setDisable(true);
+        btnAddCliente.setDisable(true);
+        btnAddProducto.setDisable(true);
+        btnAgregar.setDisable(true);
+        txtBuscarCliente.setDisable(true);
+        txtCantidad.setDisable(true);
+        dpFecha.setDisable(true);
+        dpFecha.setValue(null);
+        cmbTipoPago.setDisable(true);
+        cmbTipoPago.setValue(null);
+        txtNombreCliente.clear();
+        datosDetalle.clear();
+        txtTotal.setText("");
+    }
+    
     //  Tabla superior (ventas realizadas) 
     public void mostrarVentas() {
         datosVentas = FXCollections.observableArrayList(venta.consulta());
@@ -210,20 +244,10 @@ public class PedidosController implements Initializable {
         }
         tablaDetalle.setItems(datosDetalle);
         actualizarTotal();
-
-        txtNombreCliente.setDisable(true);
-        cmbTipoPago.setDisable(true);
-        txtCantidad.setDisable(true);
-        dpFecha.setDisable(true);
-        btnAddCliente.setDisable(true);
-        btnAddProducto.setDisable(true);
-        btnAgregar.setDisable(true);
-        btnEditar.setDisable(true);
-        btnGuardar.setDisable(true);
-        btnCancelar.setDisable(true);
-        btnAdd.setDisable(false);
-        btnImprimir.setDisable(false);
-        btnEliminar.setDisable(false); // habilitado, ahora borra la venta completa
+        
+        btnEditar.setDisable(false);
+        btnEliminar.setDisable(false);
+        btnCancelar.setDisable(false);
     }
 
     private Clientes buscarClientePorId(int idCliente) {
@@ -240,6 +264,7 @@ public class PedidosController implements Initializable {
     @FXML
     private void add(ActionEvent event) {
         limpiarVentaActual();
+        habilitar();
     }
 
     //  Agregar cliente 
@@ -415,6 +440,7 @@ public class PedidosController implements Initializable {
         idProductoEnEdicion = 0;
         txtCantidad.clear();
         actualizarTotal();
+        deshabilitar();
     }
 
     private void eliminarVentaSeleccionada() {
@@ -552,6 +578,7 @@ public class PedidosController implements Initializable {
         mostrarAlerta("Venta guardada correctamente.");
         mostrarVentas();
         limpiarVentaActual();
+        deshabilitar();
     }
 
     private double calcularTotalActual() {
@@ -582,33 +609,16 @@ public class PedidosController implements Initializable {
     // Cancelar 
     @FXML
     private void cancelar(ActionEvent event) {
-        limpiarVentaActual();
+        deshabilitar();
     }
 
     private void limpiarVentaActual() {
-        datosDetalle.clear();
         cantidadPorProducto.clear();
-        txtCantidad.clear();
-        txtNombreCliente.clear();
-        txtNombreProducto.clear();
-        txtTotal.clear();
-        cmbTipoPago.setValue(null);
         idClienteSeleccionado = 0;
         idProductoSeleccionadoParaAgregar = 0;
         idProductoEnEdicion = 0;
         idVentaSeleccionada = 0; 
         modoSoloLectura = false;
-
-        txtNombreCliente.setDisable(false);
-        cmbTipoPago.setDisable(false);
-        txtCantidad.setDisable(false);
-        btnAddCliente.setDisable(false);
-        btnAddProducto.setDisable(false);
-        btnAgregar.setDisable(false);
-        btnEditar.setDisable(false);
-        btnEliminar.setDisable(false);
-        btnGuardar.setDisable(false);
-        btnCancelar.setDisable(false);
 
         tablaDetalle.refresh();
         actualizarTotal();
@@ -656,5 +666,40 @@ public class PedidosController implements Initializable {
 
     @FXML
     private void imprimir(ActionEvent event) {
+
+        String rutaReporte = "/reportes/reportePedidos.jasper";
+
+        try (java.io.InputStream streamReporte = getClass().getResourceAsStream(rutaReporte)) {
+
+            if (streamReporte == null) {
+                throw new java.io.FileNotFoundException("No se encontró el archivo en: " + rutaReporte);
+            }
+
+            // 2. Establecer la conexión física a tu Base de Datos SQL (Reemplaza con tus credenciales)
+            java.sql.Connection conexion = java.sql.DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/myc", "root", "");
+
+            // Mapa de parámetros vacío porque imprime todos los pedidos
+            Map<String, Object> parametros = new HashMap<>();
+
+            // 3. Llenar el reporte
+            net.sf.jasperreports.engine.JasperPrint jasperPrint
+                    = net.sf.jasperreports.engine.JasperFillManager.fillReport(streamReporte, parametros, conexion);
+
+            // 4. Abrir el visor en pantalla
+            net.sf.jasperreports.view.JasperViewer visor = new net.sf.jasperreports.view.JasperViewer(jasperPrint, false);
+            visor.setTitle("Reporte General de Pedidos");
+            visor.setVisible(true);
+
+            conexion.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error de Reporte");
+            alert.setHeaderText("No se pudo cargar el reportePedidos");
+            alert.setContentText("Detalle: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 }
