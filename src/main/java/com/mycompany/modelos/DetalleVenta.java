@@ -132,5 +132,18 @@ public class DetalleVenta extends Conexion implements Sentencias {
         }
         return detalles;
     }
+    
+    public boolean eliminarPorVenta(int idVenta) {
+    String sql = "DELETE FROM detalle_venta WHERE idVenta=?";
+    try (Connection con = getCon();
+         PreparedStatement stm = con.prepareStatement(sql)) {
+        stm.setInt(1, idVenta);
+        stm.executeUpdate(); // puede eliminar 0 o más filas, no es un error si da 0
+        return true;
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+        return false;
+    }
+}
 }
             

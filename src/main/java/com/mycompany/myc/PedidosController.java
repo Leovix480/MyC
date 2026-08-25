@@ -111,6 +111,7 @@ public class PedidosController implements Initializable {
     int idClienteSeleccionado;
     int idProductoSeleccionadoParaAgregar;
     int idProductoEnEdicion;
+    int idVentaSeleccionada;
     boolean modoSoloLectura;
 
     @Override
@@ -133,7 +134,7 @@ public class PedidosController implements Initializable {
         
     }
 
-    // ---------- Tabla superior (ventas realizadas) ----------
+    //  Tabla superior (ventas realizadas) 
     public void mostrarVentas() {
         datosVentas = FXCollections.observableArrayList(venta.consulta());
 
@@ -186,6 +187,7 @@ public class PedidosController implements Initializable {
 
     private void mostrarVentaGuardada(Venta v) {
         modoSoloLectura = true;
+        idVentaSeleccionada = v.getIdVenta();
 
         Clientes c = buscarClientePorId(v.getIdCliente());
         if (c != null) {
@@ -215,11 +217,11 @@ public class PedidosController implements Initializable {
         btnAddProducto.setDisable(true);
         btnAgregar.setDisable(true);
         btnEditar.setDisable(true);
-        btnEliminar.setDisable(true);
         btnGuardar.setDisable(true);
         btnCancelar.setDisable(true);
         btnAdd.setDisable(false);
         btnImprimir.setDisable(false);
+        btnEliminar.setDisable(false); // habilitado, ahora borra la venta completa
     }
 
     private Clientes buscarClientePorId(int idCliente) {
@@ -232,13 +234,13 @@ public class PedidosController implements Initializable {
         return null;
     }
 
-    // ---------- Botón "Añadir" del panel inferior: vuelve a un pedido nuevo ----------
+    //  Botón "Añadir" del panel inferior: vuelve a un pedido nuevo 
     @FXML
     private void add(ActionEvent event) {
         limpiarVentaActual();
     }
 
-    // ---------- Agregar cliente ----------
+    //  Agregar cliente 
     @FXML
     private void addCliente(ActionEvent event) {
         if (modoSoloLectura) {
@@ -256,7 +258,7 @@ public class PedidosController implements Initializable {
         }
     }
 
-    // ---------- Agregar producto ----------
+    //  Agregar producto 
     @FXML
     private void abrirProducto(ActionEvent event) {
         if (modoSoloLectura) {
@@ -324,7 +326,7 @@ public class PedidosController implements Initializable {
         actualizarTotal();
     }
 
-    // ---------- Tabla de detalle ----------
+    // Tabla de detalle
     private void configurarColumnasDetalle() {
         columIDProducto.setCellValueFactory(new PropertyValueFactory<>("idProducto"));
         columNombreProducto.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -397,6 +399,7 @@ public class PedidosController implements Initializable {
     @FXML
     private void eliminar(ActionEvent event) {
         if (modoSoloLectura) {
+            eliminarVentaSeleccionada();
             return;
         }
 
@@ -412,6 +415,29 @@ public class PedidosController implements Initializable {
         actualizarTotal();
     }
 
+    private void eliminarVentaSeleccionada() {
+        if (idVentaSeleccionada <= 0) {
+            mostrarAlerta("Seleccioná una venta de la tabla para eliminar.");
+            return;
+        }
+
+        restituirIngredientes(idVentaSeleccionada); 
+
+        if (!detalleVenta.eliminarPorVenta(idVentaSeleccionada)) {
+            mostrarAlerta("No se pudo eliminar el detalle de la venta.");
+            return;
+        }
+
+        venta.setIdVenta(idVentaSeleccionada);
+        if (venta.eliminar()) {
+            mostrarAlerta("Venta eliminada correctamente.");
+            mostrarVentas();
+            limpiarVentaActual();
+        } else {
+            mostrarAlerta("No se pudo eliminar la venta.");
+        }
+    }
+
     private void actualizarTotal() {
         double total = 0;
         for (Productos p : datosDetalle) {
@@ -420,7 +446,7 @@ public class PedidosController implements Initializable {
         txtTotal.setText(String.valueOf(total));
     }
 
-    // ---------- Validación de stock ----------
+    //  Validación de stock 
     private boolean hayStockSuficiente(int idProductoCambiado, int cantidadNuevaDelProducto) {
         Map<Integer, Double> requeridoPorIngrediente = new HashMap<>();
         boolean yaEstaEnTabla = false;
@@ -467,7 +493,7 @@ public class PedidosController implements Initializable {
         }
     }
 
-    // ---------- Guardar venta ----------
+    //  Guardar venta 
     @FXML
     private void guardar(ActionEvent event) {
         if (modoSoloLectura) {
@@ -546,7 +572,7 @@ public class PedidosController implements Initializable {
         }
     }
 
-    // ---------- Cancelar ----------
+    // Cancelar 
     @FXML
     private void cancelar(ActionEvent event) {
         limpiarVentaActual();
@@ -563,6 +589,7 @@ public class PedidosController implements Initializable {
         idClienteSeleccionado = 0;
         idProductoSeleccionadoParaAgregar = 0;
         idProductoEnEdicion = 0;
+        idVentaSeleccionada = 0; 
         modoSoloLectura = false;
 
         txtNombreCliente.setDisable(false);
@@ -580,7 +607,7 @@ public class PedidosController implements Initializable {
         actualizarTotal();
     }
 
-    // ---------- Utilidades ----------
+    // Utilidades
     public void abrirFxml(String formulario, String titulo) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(formulario));
         try {
@@ -600,6 +627,24 @@ public class PedidosController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+    
+    private void restituirIngredientes(int idVenta) {
+        ArrayList<DetalleVenta> detalles = detalleVenta.consultaPorVenta(idVenta);
+        Map<Integer, Double> requeridoPorIngrediente = new HashMap<>();
+
+        for (DetalleVenta d : detalles) {
+            acumularRequerimiento(requeridoPorIngrediente, d.getIdProducto(), d.getCantidad());
+        }
+
+        for (Map.Entry<Integer, Double> entry : requeridoPorIngrediente.entrySet()) {
+            Ingredientes ing = ingredienteModelo.consultaPorId(entry.getKey());
+            if (ing == null) {
+                continue;
+            }
+            ing.setStock((int) Math.round(ing.getStock() + entry.getValue()));
+            ing.editar();
+        }
     }
 
     @FXML
