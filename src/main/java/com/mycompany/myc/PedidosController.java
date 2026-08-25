@@ -193,6 +193,7 @@ public class PedidosController implements Initializable {
         if (c != null) {
             txtNombreCliente.setText(c.getNombre() + " " + c.getApellido());
             idClienteSeleccionado = c.getIdCliente();
+            dpFecha.setValue(v.getFecha().toLocalDate());
         }
 
         cmbTipoPago.setValue(v.getTipoPago());
@@ -213,6 +214,7 @@ public class PedidosController implements Initializable {
         txtNombreCliente.setDisable(true);
         cmbTipoPago.setDisable(true);
         txtCantidad.setDisable(true);
+        dpFecha.setDisable(true);
         btnAddCliente.setDisable(true);
         btnAddProducto.setDisable(true);
         btnAgregar.setDisable(true);
@@ -508,13 +510,18 @@ public class PedidosController implements Initializable {
             mostrarAlerta("Agregá al menos un producto a la venta.");
             return;
         }
+        if (dpFecha.getValue() == null) {
+            mostrarAlerta("Seleccione una fecha.");
+            return;
+        }
+        
         String tipoPago = cmbTipoPago.getValue();
         if (tipoPago == null || tipoPago.isEmpty()) {
             mostrarAlerta("Seleccioná un método de pago.");
             return;
         }
-
-        venta.setFecha(LocalDateTime.now());
+        
+        venta.setFecha(dpFecha.getValue().atStartOfDay());
         venta.setIdCliente(idClienteSeleccionado);
         venta.setTipoPago(tipoPago);
         venta.setTotalVenta(calcularTotalActual());
