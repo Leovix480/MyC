@@ -13,11 +13,22 @@
         <maven.compiler.release>25</maven.compiler.release>
         <exec.mainClass>com.mycompany.myc.main</exec.mainClass>
     </properties>
+    
+    <repositories>
+        <repository>
+            <id>jaspersoft-third-party</id>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
+        </repository>
+        <repository>
+            <id>jr-ce-releases</id>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/jr-ce-releases/</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>6.20.0</version>
+            <version>6.8.0</version>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>

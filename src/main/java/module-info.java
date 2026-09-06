@@ -9,4 +9,5 @@ module com.mycompany.myc {
     exports com.mycompany.myc;
     //exports com.mycompany.myc.modelos;
     requires jasperreports;
+ 
 }

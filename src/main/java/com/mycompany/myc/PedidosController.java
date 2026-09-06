@@ -683,8 +683,7 @@ public class PedidosController implements Initializable {
             Map<String, Object> parametros = new HashMap<>();
 
             // 3. Llenar el reporte
-            net.sf.jasperreports.engine.JasperPrint jasperPrint
-                    = net.sf.jasperreports.engine.JasperFillManager.fillReport(streamReporte, parametros, conexion);
+            net.sf.jasperreports.engine.JasperPrint jasperPrint = net.sf.jasperreports.engine.JasperFillManager.fillReport(streamReporte, parametros, conexion);
 
             // 4. Abrir el visor en pantalla
             net.sf.jasperreports.view.JasperViewer visor = new net.sf.jasperreports.view.JasperViewer(jasperPrint, false);
