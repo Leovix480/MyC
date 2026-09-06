@@ -25,14 +25,14 @@
             </TableView>
             <TableView fx:id="tablaFaltantes" layoutX="379.0" layoutY="48.0" prefHeight="162.0" prefWidth="223.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
                 <placeholder>
-                    <Label text="No faltan ingredientes" style="-fx-text-fill: #5C3A34;" />
+                    <Label style="-fx-text-fill: #5C3A34;" text="No faltan ingredientes" />
                 </placeholder>
               <columns>
                 <TableColumn fx:id="columNombreF" prefWidth="153.60003662109375" text="Nombre" />
                 <TableColumn fx:id="columStockMin" prefWidth="69.5999755859375" text="Stock Min" />
               </columns>
             </TableView>
-            <Label layoutX="390.0" layoutY="19.0" text="Ingredientes Faltantes:" style="-fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <Label layoutX="390.0" layoutY="19.0" style="-fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Ingredientes Faltantes:" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="16.0" layoutY="257.0" prefHeight="220.0" prefWidth="622.0" style="-fx-border-color: #E8A798; -fx-background-color: #FFF6F3; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
@@ -44,6 +44,7 @@
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -51,19 +52,20 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Nombre:" style="-fx-text-fill: #5C3A34;" GridPane.halignment="CENTER" />
-                  <Label text="Precio:" style="-fx-text-fill: #5C3A34;" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
-                  <Label text="Stock:" style="-fx-text-fill: #5C3A34;" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                  <Label text="Stock Minimo:" style="-fx-text-fill: #5C3A34;" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <Label style="-fx-text-fill: #5C3A34;" text="Nombre:" GridPane.halignment="CENTER" />
+                  <Label style="-fx-text-fill: #5C3A34;" text="Precio:" GridPane.columnIndex="4" GridPane.halignment="CENTER" />
+                  <Label style="-fx-text-fill: #5C3A34;" text="Stock:" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <Label style="-fx-text-fill: #5C3A34;" text="Stock Minimo:" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                   <TextField fx:id="txtNombre" disable="true" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" GridPane.columnIndex="1" />
-                  <TextField fx:id="txtPrecio" disable="true" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" GridPane.columnIndex="4" />
                   <TextField fx:id="txtStock" disable="true" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField fx:id="txtStockMin" disable="true" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtStockMin" disable="true" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                   <Button fx:id="btnEditar" disable="true" mnemonicParsing="false" onAction="#editar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Editar" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                   <Button fx:id="btnGuardar" disable="true" mnemonicParsing="false" onAction="#guardar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Guardar" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                   <Button fx:id="btnEliminar" disable="true" mnemonicParsing="false" onAction="#eliminar" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" text="Eliminar" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                   <Button fx:id="btnCancelar" disable="true" mnemonicParsing="false" onAction="#cancelar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Cancelar" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                   <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#add" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Añadir" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <TextField fx:id="txtPrecio" disable="true" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" GridPane.columnIndex="5" />
+                  <Button fx:id="btnImprimir" mnemonicParsing="false" onAction="#imprimir" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" text="Imprimir" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>

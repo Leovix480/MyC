@@ -696,7 +696,7 @@ public class PedidosController implements Initializable {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error de Reporte");
-            alert.setHeaderText("No se pudo cargar el reportePedidos");
+            alert.setHeaderText("No se pudo cargar el reporte de los pedidos");
             alert.setContentText("Detalle: " + e.getMessage());
             alert.showAndWait();
         }

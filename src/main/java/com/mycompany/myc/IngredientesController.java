@@ -4,6 +4,8 @@ import com.mycompany.modelos.Ingredientes;
 import com.mycompany.myc.clases.ventasSingleton;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -18,6 +21,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 public class IngredientesController implements Initializable {
 
@@ -57,6 +64,10 @@ public class IngredientesController implements Initializable {
     private Button btnCancelar;
     @FXML
     private Button btnAdd;
+    @FXML
+    private AnchorPane root;
+    @FXML
+    private Button btnImprimir;
     
     ObservableList<Ingredientes> datos;
     ObservableList<Ingredientes> datosF;
@@ -64,6 +75,7 @@ public class IngredientesController implements Initializable {
     Ingredientes ing = new Ingredientes();
     int codIngredientes;
     int id;
+    BooleanProperty verF = new SimpleBooleanProperty();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -72,6 +84,7 @@ public class IngredientesController implements Initializable {
         btnCancelar.setCursor(Cursor.HAND);
         btnGuardar.setCursor(Cursor.HAND);
         btnAdd.setCursor(Cursor.HAND);
+        btnImprimir.setCursor(Cursor.HAND);
         mostrarDatos();
         mostrarIFaltantes();
     }    
@@ -87,6 +100,7 @@ public class IngredientesController implements Initializable {
         columNombreF.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         columStockMin.setCellValueFactory(new PropertyValueFactory<>("stockMin"));
         tablaFaltantes.setItems(datosF);
+        verF.bind(Bindings.isEmpty(datosF));
     }
     
     
@@ -243,6 +257,51 @@ public class IngredientesController implements Initializable {
                 btnCancelar.setDisable(false);
                 btnAdd.setDisable(true);
             }
+        }
+    }
+
+    @FXML
+    private void imprimir(ActionEvent event) {
+        if(!verF.get()){    
+            String rutaReporte = "/reportes/ingredientesF.jasper";
+
+            try (java.io.InputStream streamReporte = getClass().getResourceAsStream(rutaReporte)) {
+
+                if (streamReporte == null) {
+                    throw new java.io.FileNotFoundException("No se encontró el archivo en: " + rutaReporte);
+                }
+
+                // 2. Establecer la conexión física a tu Base de Datos SQL (Reemplaza con tus credenciales)
+                java.sql.Connection conexion = java.sql.DriverManager.getConnection(
+                        "jdbc:mysql://localhost:3306/myc", "root", "");
+
+                // Mapa de parámetros vacío porque imprime todos los pedidos
+                Map<String, Object> parametros = new HashMap<>();
+
+                // 3. Llenar el reporte
+                net.sf.jasperreports.engine.JasperPrint jasperPrint = net.sf.jasperreports.engine.JasperFillManager.fillReport(streamReporte, parametros, conexion);
+
+                // 4. Abrir el visor en pantalla
+                net.sf.jasperreports.view.JasperViewer visor = new net.sf.jasperreports.view.JasperViewer(jasperPrint, false);
+                visor.setTitle("Reporte de Ingredientes Faltantes");
+                visor.setVisible(true);
+
+                conexion.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error de Reporte");
+                alert.setHeaderText("No se pudo cargar el reporte de los ingredientes");
+                alert.setContentText("Detalle: " + e.getMessage());
+                alert.showAndWait();
+            }
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("No se puede imprimir un reporte si no faltan ingredientes");
+            alert.showAndWait();
         }
     }
 }
