@@ -4,6 +4,7 @@
  */
 package com.mycompany.myc;
 
+import com.mycompany.modelos.Ingredientes;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,6 +42,10 @@ public class MenuController implements Initializable {
     private Button btnCerrar;
     @FXML
     private Label lblAcercaDe;
+    @FXML
+    private Label lblAlertaStock;
+
+    Ingredientes ingredienteModelo = new Ingredientes();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -50,7 +56,35 @@ public class MenuController implements Initializable {
         btnClientes.setCursor(Cursor.HAND);
         btnIngredientes.setCursor(Cursor.HAND);
         btnCerrar.setCursor(Cursor.HAND);
+        actualizarAlertaStock();
     }    
+
+    // Alerta de stock mínimo: mismo criterio que la tabla de faltantes de la vista Ingredientes (stock <= stockMin)
+    public void actualizarAlertaStock() {
+        int cantidad = 0;
+        try {
+            ArrayList<Ingredientes> ingredientes = ingredienteModelo.consulta();
+            for (Ingredientes ing : ingredientes) {
+                if (ing.getStock() <= ing.getStockMin()) {
+                    cantidad++;
+                }
+            }
+        } catch (Exception ex) {
+            // Si no se pudo consultar la BD, no se muestra la alerta
+            System.getLogger(MenuController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+
+        if (cantidad == 0) {
+            lblAlertaStock.setVisible(false);
+            return;
+        }
+
+        String texto = (cantidad == 1)
+                ? "Alerta: 1 ingrediente está por debajo del stock mínimo"
+                : "Alerta: " + cantidad + " ingredientes están por debajo del stock mínimo";
+        lblAlertaStock.setText(texto);
+        lblAlertaStock.setVisible(true);
+    }
     
     public void abrirFxml(String formulario, String titulo) {
         FXMLLoader loader=new FXMLLoader(getClass().getResource(formulario));
@@ -61,6 +95,8 @@ public class MenuController implements Initializable {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
+            // Al cerrar la ventana modal se vuelve al menú: refrescar la alerta por si cambió el stock
+            actualizarAlertaStock();
         } catch (IOException ex) {
             System.getLogger(MenuController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             System.out.println("holaaaa");
