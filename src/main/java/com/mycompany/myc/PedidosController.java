@@ -30,6 +30,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -91,9 +92,16 @@ public class PedidosController implements Initializable {
     @FXML
     private Button btnImprimir;
     @FXML
+    private Button btnFactura;
+    @FXML
     private TextField txtTotal;
     @FXML
+    private Label lblTotalIva;
+    @FXML
     private ComboBox<String> cmbTipoPago;
+
+    // IVA que se agrega sobre el precio de cada producto (solo informativo en la vista; se aplica en la factura)
+    private static final double IVA = 0.10;
 
     Clientes cliente = new Clientes();
     Productos productoModelo = new Productos();
@@ -131,6 +139,7 @@ public class PedidosController implements Initializable {
         btnAddProducto.setCursor(Cursor.HAND);
         btnAgregar.setCursor(Cursor.HAND);
         btnImprimir.setCursor(Cursor.HAND);
+        btnFactura.setCursor(Cursor.HAND);
         
         deshabilitar();
     }
@@ -166,6 +175,7 @@ public class PedidosController implements Initializable {
         txtNombreCliente.clear();
         datosDetalle.clear();
         txtTotal.setText("");
+        lblTotalIva.setText("c/IVA 10%: ");
     }
     
     //  Tabla superior (ventas realizadas) 
@@ -472,6 +482,26 @@ public class PedidosController implements Initializable {
             total += p.getPrecio() * cantidadPorProducto.getOrDefault(p.getIdProducto(), 0);
         }
         txtTotal.setText(String.valueOf(total));
+        lblTotalIva.setText("c/IVA 10%: " + String.valueOf(redondear2(total + calcularIvaActual())));
+    }
+
+    // IVA de un importe, redondeado a 2 decimales
+    private double calcularIva(double importe) {
+        return redondear2(importe * IVA);
+    }
+
+    // Suma del IVA calculado producto por producto (mismo criterio que usa la factura)
+    private double calcularIvaActual() {
+        double iva = 0;
+        for (Productos p : datosDetalle) {
+            int cant = cantidadPorProducto.getOrDefault(p.getIdProducto(), 0);
+            iva += calcularIva(p.getPrecio() * cant);
+        }
+        return redondear2(iva);
+    }
+
+    private double redondear2(double valor) {
+        return Math.round(valor * 100.0) / 100.0;
     }
 
     //  Validación de stock 
@@ -697,6 +727,87 @@ public class PedidosController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error de Reporte");
             alert.setHeaderText("No se pudo cargar el reporte de los pedidos");
+            alert.setContentText("Detalle: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    //  Factura del pedido actual (datos tomados de la vista) 
+    @FXML
+    private void factura(ActionEvent event) {
+
+        if (idClienteSeleccionado <= 0 || txtNombreCliente.getText().trim().isEmpty()) {
+            mostrarAlerta("Seleccioná un cliente para generar la factura.");
+            return;
+        }
+        if (datosDetalle.isEmpty()) {
+            mostrarAlerta("Agregá al menos un producto para generar la factura.");
+            return;
+        }
+        if (dpFecha.getValue() == null) {
+            mostrarAlerta("Seleccione una fecha para generar la factura.");
+            return;
+        }
+
+        String rutaReporte = "/reportes/facturaMyC.jrxml";
+
+        try (java.io.InputStream streamReporte = getClass().getResourceAsStream(rutaReporte)) {
+
+            if (streamReporte == null) {
+                throw new java.io.FileNotFoundException("No se encontró el archivo en: " + rutaReporte);
+            }
+
+            // 1. Filas del detalle: mismos datos que muestra tablaDetalle + IVA 10% por producto
+            java.util.List<Map<String, ?>> filas = new ArrayList<>();
+            for (Productos p : datosDetalle) {
+                int cant = cantidadPorProducto.getOrDefault(p.getIdProducto(), 0);
+                double subtotal = p.getPrecio() * cant;
+                double iva = calcularIva(subtotal);
+                Map<String, Object> fila = new HashMap<>();
+                fila.put("nombre", p.getNombre());
+                fila.put("cantidad", cant);
+                fila.put("precio", p.getPrecio());
+                fila.put("subtotal", subtotal);
+                fila.put("iva", iva);
+                fila.put("totalConIva", redondear2(subtotal + iva));
+                filas.add(fila);
+            }
+            net.sf.jasperreports.engine.data.JRMapCollectionDataSource datos
+                    = new net.sf.jasperreports.engine.data.JRMapCollectionDataSource(filas);
+
+            // 2. Parámetros de cabecera tomados de la vista
+            Clientes c = buscarClientePorId(idClienteSeleccionado);
+            String tipoPago = cmbTipoPago.getValue();
+
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("cliente", txtNombreCliente.getText());
+            parametros.put("direccion", c != null && c.getDireccion() != null ? c.getDireccion() : "");
+            parametros.put("telefono", c != null && c.getTelefono() != null ? c.getTelefono() : "");
+            parametros.put("fecha", dpFecha.getValue().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            parametros.put("numeroPedido", idVentaSeleccionada > 0 ? idVentaSeleccionada : null); // en blanco si no se guardó
+            parametros.put("tipoPago", tipoPago != null && !tipoPago.isEmpty() ? tipoPago : "-");
+            double total = calcularTotalActual();      // mismo cálculo que txtTotal (sin IVA)
+            double totalIva = calcularIvaActual();     // suma del IVA de cada producto
+            parametros.put("total", total);
+            parametros.put("totalIva", totalIva);
+            parametros.put("totalConIva", redondear2(total + totalIva)); // mismo valor que lblTotalIva
+
+            // 3. Compilar la plantilla y llenar el reporte con los datos de la vista
+            net.sf.jasperreports.engine.JasperReport reporte
+                    = net.sf.jasperreports.engine.JasperCompileManager.compileReport(streamReporte);
+            net.sf.jasperreports.engine.JasperPrint jasperPrint
+                    = net.sf.jasperreports.engine.JasperFillManager.fillReport(reporte, parametros, datos);
+
+            // 4. Abrir el visor en pantalla
+            net.sf.jasperreports.view.JasperViewer visor = new net.sf.jasperreports.view.JasperViewer(jasperPrint, false);
+            visor.setTitle("Factura MyC");
+            visor.setVisible(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error de Factura");
+            alert.setHeaderText("No se pudo generar la factura");
             alert.setContentText("Detalle: " + e.getMessage());
             alert.showAndWait();
         }

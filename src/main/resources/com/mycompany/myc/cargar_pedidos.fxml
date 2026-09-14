@@ -65,7 +65,7 @@
       </AnchorPane>
 
       <!-- Panel Acciones y total -->
-      <AnchorPane layoutX="14.0" layoutY="512.0" prefHeight="54.0" prefWidth="752.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
+      <AnchorPane layoutX="14.0" layoutY="512.0" prefHeight="60.0" prefWidth="752.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
          <children>
             <Button fx:id="btnAdd" layoutX="12.0" layoutY="12.0" mnemonicParsing="false" onAction="#add" prefHeight="30.0" prefWidth="75.0" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Añadir" />
             <Button fx:id="btnGuardar" disable="true" layoutX="95.0" layoutY="12.0" mnemonicParsing="false" onAction="#guardar" prefHeight="30.0" prefWidth="75.0" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Guardar" />
@@ -73,9 +73,11 @@
             <Button fx:id="btnEliminar" disable="true" layoutX="261.0" layoutY="12.0" mnemonicParsing="false" onAction="#eliminar" prefHeight="30.0" prefWidth="75.0" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" text="Eliminar" />
             <Button fx:id="btnCancelar" layoutX="344.0" layoutY="12.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="30.0" prefWidth="75.0" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Cancelar" />
             <Button fx:id="btnImprimir" layoutX="427.0" layoutY="12.0" mnemonicParsing="false" onAction="#imprimir" prefHeight="30.0" prefWidth="75.0" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Imprimir" />
+            <Button fx:id="btnFactura" layoutX="510.0" layoutY="12.0" mnemonicParsing="false" onAction="#factura" prefHeight="30.0" prefWidth="75.0" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Factura" />
 
             <Label layoutX="600.0" layoutY="17.0" style="-fx-text-fill: #5C3A34; -fx-font-weight: bold;" text="Total:" />
             <TextField fx:id="txtTotal" disable="true" layoutX="644.0" layoutY="12.0" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
+            <Label fx:id="lblTotalIva" alignment="CENTER_RIGHT" layoutX="560.0" layoutY="44.0" prefHeight="14.0" prefWidth="180.0" style="-fx-text-fill: #5C3A34; -fx-font-size: 10;" text="c/IVA 10%: " />
          </children>
       </AnchorPane>
 
