@@ -68,13 +68,21 @@ public class Productos extends Conexion implements Sentencias {
 
     @Override
     public boolean insertar() {
+        // idProducto es AUTO_INCREMENT en MySQL: se recupera la clave generada
+        // (mismo patrón que Clientes.insertar(), Recetas.insertar() y Venta.insertar()).
         String sql = "INSERT INTO producto (nombre, precio, idRecetas) VALUES (?, ?, ?)";
         try (Connection con = getCon();
-             PreparedStatement stm = con.prepareStatement(sql)) {
+             PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stm.setString(1, this.nombre);
             stm.setDouble(2, this.precio);
             stm.setInt(3, this.idRecetas);
             stm.executeUpdate();
+
+            try (ResultSet rs = stm.getGeneratedKeys()) {
+                if (rs.next()) {
+                    this.idProducto = rs.getInt(1);
+                }
+            }
             return true;
         } catch (SQLException ex) {
             System.getLogger(Productos.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -133,7 +141,77 @@ public class Productos extends Conexion implements Sentencias {
         }
         return productos;
     }
-    
+
+    /**
+     * Vuelve consecutivos los IDs de producto posteriores al recién eliminado
+     * (si se borró el 2, el 3 pasa a ser 2, el 4 pasa a ser 3, etc.). Las filas de
+     * detalle_venta.idProducto que referencian a los productos movidos se
+     * actualizan solas gracias a ON UPDATE CASCADE en fk_Producto_has_Venta_Producto1
+     * (ver migraciones/001_cascade_para_renumeracion.sql). No toca idRecetas de
+     * ninguna fila. Transaccional: si algo falla no se aplica ningún cambio, y
+     * nunca se propaga como error del borrado.
+     */
+    public boolean renumerarDespuesDeEliminar(int idEliminado) {
+        String sqlSeleccionar = "SELECT idProducto FROM producto WHERE idProducto > ? ORDER BY idProducto ASC";
+        String sqlActualizar = "UPDATE producto SET idProducto = ? WHERE idProducto = ?";
+
+        try (Connection con = getCon()) {
+            con.setAutoCommit(false);
+            try {
+                ArrayList<Integer> idsAMover = new ArrayList<>();
+                try (PreparedStatement stm = con.prepareStatement(sqlSeleccionar)) {
+                    stm.setInt(1, idEliminado);
+                    try (ResultSet rs = stm.executeQuery()) {
+                        while (rs.next()) {
+                            idsAMover.add(rs.getInt("idProducto"));
+                        }
+                    }
+                }
+
+                try (PreparedStatement stm = con.prepareStatement(sqlActualizar)) {
+                    for (int idActual : idsAMover) {
+                        stm.setInt(1, idActual - 1);
+                        stm.setInt(2, idActual);
+                        stm.executeUpdate();
+                    }
+                }
+
+                con.commit();
+            } catch (SQLException ex) {
+                con.rollback();
+                System.getLogger(Productos.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                return false;
+            } finally {
+                con.setAutoCommit(true);
+            }
+        } catch (SQLException ex) {
+            System.getLogger(Productos.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            return false;
+        }
+
+        ajustarAutoIncrement();
+        return true;
+    }
+
+    // Ajuste best-effort del contador AUTO_INCREMENT tras renumerar: si falla no
+    // afecta la integridad de los datos, en el peor caso el próximo ID no es el mínimo posible.
+    private void ajustarAutoIncrement() {
+        String sqlMax = "SELECT MAX(idProducto) AS maximo FROM producto";
+        try (Connection con = getCon();
+             Statement stmSelect = con.createStatement();
+             ResultSet rs = stmSelect.executeQuery(sqlMax)) {
+            int maximo = 0;
+            if (rs.next()) {
+                maximo = rs.getInt("maximo");
+            }
+            try (Statement stmAlter = con.createStatement()) {
+                stmAlter.executeUpdate("ALTER TABLE producto AUTO_INCREMENT = " + (maximo + 1));
+            }
+        } catch (SQLException ex) {
+            System.getLogger(Productos.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
+
     public Productos consultaPorReceta(int idRecetas) {
     String sql = "SELECT * FROM producto WHERE idRecetas=?";
     try (Connection con = getCon();

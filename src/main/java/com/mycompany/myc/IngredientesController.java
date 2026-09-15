@@ -1,6 +1,7 @@
 package com.mycompany.myc;
 
 import com.mycompany.modelos.Ingredientes;
+import com.mycompany.myc.clases.Textos;
 import com.mycompany.myc.clases.ventasSingleton;
 import java.net.URL;
 import java.util.ArrayList;
@@ -129,7 +130,15 @@ public class IngredientesController implements Initializable {
 
     @FXML
     private void editar(ActionEvent event) {
-        String nom = txtNombre.getText();
+        if (id <= 0) {
+            mostrarAlerta("Alerta: Seleccioná un ingrediente de la tabla para editar.");
+            return;
+        }
+        if (!validarDatos()) {
+            return;
+        }
+
+        String nom = Textos.capitalizarInicial(txtNombre.getText());
         double pre = Double.parseDouble(txtPrecio.getText());
         int sto = Integer.parseInt(txtStock.getText());
         int stom = Integer.parseInt(txtStockMin.getText());
@@ -146,13 +155,69 @@ public class IngredientesController implements Initializable {
             limpiar();
             cancelar(event);
         } else {
-            System.out.println("No se pudo edittar el ingrediente.");
+            mostrarAlerta("No se pudo editar el ingrediente.");
         }
+    }
+
+    // Valida los campos del formulario antes de insertar o editar un ingrediente.
+    // Devuelve true si todos los datos son válidos; si no, muestra una alerta y devuelve false.
+    private boolean validarDatos() {
+        String nom = txtNombre.getText();
+        if (nom == null || nom.trim().isEmpty()) {
+            mostrarAlerta("Alerta: El nombre del ingrediente no puede estar vacío.");
+            return false;
+        }
+        if (nom.trim().length() > 100) {
+            mostrarAlerta("Alerta: El nombre no puede superar los 100 caracteres.");
+            return false;
+        }
+
+        double pre;
+        try {
+            pre = Double.parseDouble(txtPrecio.getText());
+        } catch (NumberFormatException | NullPointerException ex) {
+            mostrarAlerta("Alerta: El precio debe ser un número válido.");
+            return false;
+        }
+        if (pre <= 0) {
+            mostrarAlerta("Alerta: El precio debe ser mayor a 0.");
+            return false;
+        }
+
+        int sto;
+        try {
+            sto = Integer.parseInt(txtStock.getText());
+        } catch (NumberFormatException | NullPointerException ex) {
+            mostrarAlerta("Alerta: El stock debe ser un número entero válido.");
+            return false;
+        }
+        if (sto < 0) {
+            mostrarAlerta("Alerta: El stock no puede ser negativo.");
+            return false;
+        }
+
+        int stom;
+        try {
+            stom = Integer.parseInt(txtStockMin.getText());
+        } catch (NumberFormatException | NullPointerException ex) {
+            mostrarAlerta("Alerta: El stock mínimo debe ser un número entero válido.");
+            return false;
+        }
+        if (stom < 0) {
+            mostrarAlerta("Alerta: El stock mínimo no puede ser negativo.");
+            return false;
+        }
+
+        return true;
     }
 
     @FXML
     private void guardar(ActionEvent event) {
-        String nom = txtNombre.getText();
+        if (!validarDatos()) {
+            return;
+        }
+
+        String nom = Textos.capitalizarInicial(txtNombre.getText());
         double pre = Double.parseDouble(txtPrecio.getText());
         int sto = Integer.parseInt(txtStock.getText());
         int stom = Integer.parseInt(txtStockMin.getText());
@@ -168,30 +233,28 @@ public class IngredientesController implements Initializable {
             limpiar();
             cancelar(event);
         } else {
-            System.out.println("No se pudo guardar el ingrediente.");
+            mostrarAlerta("No se pudo guardar el ingrediente.");
         }
     }
 
     @FXML
     private void eliminar(ActionEvent event) {
-        String nom = txtNombre.getText();
-        double pre = Double.parseDouble(txtPrecio.getText());
-        int sto = Integer.parseInt(txtStock.getText());
-        int stom = Integer.parseInt(txtStockMin.getText());
-        ing.setNombre(nom);
-        ing.setPrecio(pre);
-        ing.setStock(sto);
-        ing.setStockMin(stom);
+        if (id <= 0) {
+            mostrarAlerta("Alerta: Seleccioná un ingrediente de la tabla para eliminar.");
+            return;
+        }
+
         ing.setIdIngredientes(id);
-        
+
         if (ing.eliminar()) {
             System.out.println("Ingrediente eliminado correctamente.");
+            ing.renumerarDespuesDeEliminar(id);
             mostrarDatos();
             mostrarIFaltantes();
             limpiar();
             cancelar(event);
         } else {
-            System.out.println("No se pudo eliminar el ingredientes.");
+            mostrarAlerta("No se pudo eliminar el ingrediente.");
         }
         id = -1;
     }
@@ -303,5 +366,12 @@ public class IngredientesController implements Initializable {
             alert.setContentText("No se puede imprimir un reporte si no faltan ingredientes");
             alert.showAndWait();
         }
+    }
+
+    private void mostrarAlerta(String msg) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
 }

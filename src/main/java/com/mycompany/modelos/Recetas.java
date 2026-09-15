@@ -124,4 +124,74 @@ public class Recetas extends Conexion implements Sentencias {
         }
         return recetas;
     }
+
+    /**
+     * Vuelve consecutivos los IDs de receta posteriores al recién eliminado
+     * (si se borró el 2, el 3 pasa a ser 2, el 4 pasa a ser 3, etc.). Las filas de
+     * producto.idRecetas y detalle_receta.idRecetas que referencian a las recetas
+     * movidas se actualizan solas gracias a ON UPDATE CASCADE en fk_Producto_Recetas1
+     * y fk_Ingredientes_has_Recetas_Recetas1 (ver migraciones/001_cascade_para_renumeracion.sql).
+     * Transaccional: si algo falla no se aplica ningún cambio, y nunca se propaga
+     * como error del borrado.
+     */
+    public boolean renumerarDespuesDeEliminar(int idEliminado) {
+        String sqlSeleccionar = "SELECT idRecetas FROM recetas WHERE idRecetas > ? ORDER BY idRecetas ASC";
+        String sqlActualizar = "UPDATE recetas SET idRecetas = ? WHERE idRecetas = ?";
+
+        try (Connection con = getCon()) {
+            con.setAutoCommit(false);
+            try {
+                ArrayList<Integer> idsAMover = new ArrayList<>();
+                try (PreparedStatement stm = con.prepareStatement(sqlSeleccionar)) {
+                    stm.setInt(1, idEliminado);
+                    try (ResultSet rs = stm.executeQuery()) {
+                        while (rs.next()) {
+                            idsAMover.add(rs.getInt("idRecetas"));
+                        }
+                    }
+                }
+
+                try (PreparedStatement stm = con.prepareStatement(sqlActualizar)) {
+                    for (int idActual : idsAMover) {
+                        stm.setInt(1, idActual - 1);
+                        stm.setInt(2, idActual);
+                        stm.executeUpdate();
+                    }
+                }
+
+                con.commit();
+            } catch (SQLException ex) {
+                con.rollback();
+                System.getLogger(Recetas.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                return false;
+            } finally {
+                con.setAutoCommit(true);
+            }
+        } catch (SQLException ex) {
+            System.getLogger(Recetas.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            return false;
+        }
+
+        ajustarAutoIncrement();
+        return true;
+    }
+
+    // Ajuste best-effort del contador AUTO_INCREMENT tras renumerar: si falla no
+    // afecta la integridad de los datos, en el peor caso el próximo ID no es el mínimo posible.
+    private void ajustarAutoIncrement() {
+        String sqlMax = "SELECT MAX(idRecetas) AS maximo FROM recetas";
+        try (Connection con = getCon();
+             Statement stmSelect = con.createStatement();
+             ResultSet rs = stmSelect.executeQuery(sqlMax)) {
+            int maximo = 0;
+            if (rs.next()) {
+                maximo = rs.getInt("maximo");
+            }
+            try (Statement stmAlter = con.createStatement()) {
+                stmAlter.executeUpdate("ALTER TABLE recetas AUTO_INCREMENT = " + (maximo + 1));
+            }
+        } catch (SQLException ex) {
+            System.getLogger(Recetas.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
 }

@@ -39,13 +39,22 @@ public class Ingredientes extends Conexion implements Sentencias{
 
     @Override
     public boolean insertar() {
+        // idIngredientes es AUTO_INCREMENT en MySQL: se recupera la clave generada
+        // (mismo patrón que Clientes.insertar(), Recetas.insertar() y Venta.insertar()).
         String sql = "INSERT INTO ingredientes (nombre, precioIngredientes, stockIngredientes, stockMinimo) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement stm = getCon().prepareStatement(sql);) {
+        try (Connection con = getCon();
+             PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stm.setString(1, this.nombre);
             stm.setDouble(2, this.precio);
             stm.setInt(3, this.stock);
             stm.setInt(4, this.stockMin);
             stm.executeUpdate();
+
+            try (ResultSet rs = stm.getGeneratedKeys()) {
+                if (rs.next()) {
+                    this.idIngredientes = rs.getInt(1);
+                }
+            }
             return true;
         } catch (SQLException ex) {
             System.getLogger(Ingredientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -114,7 +123,76 @@ public class Ingredientes extends Conexion implements Sentencias{
         }
         return ingrediente;
     }
-    
+
+    /**
+     * Vuelve consecutivos los IDs de ingrediente posteriores al recién eliminado
+     * (si se borró el 2, el 3 pasa a ser 2, el 4 pasa a ser 3, etc.). Las filas de
+     * detalle_receta que referencian a los ingredientes movidos se actualizan solas
+     * gracias a ON UPDATE CASCADE en fk_Ingredientes_has_Recetas_Ingredientes
+     * (ver migraciones/001_cascade_para_renumeracion.sql). Transaccional: si algo
+     * falla no se aplica ningún cambio, y nunca se propaga como error del borrado.
+     */
+    public boolean renumerarDespuesDeEliminar(int idEliminado) {
+        String sqlSeleccionar = "SELECT idIngredientes FROM ingredientes WHERE idIngredientes > ? ORDER BY idIngredientes ASC";
+        String sqlActualizar = "UPDATE ingredientes SET idIngredientes = ? WHERE idIngredientes = ?";
+
+        try (Connection con = getCon()) {
+            con.setAutoCommit(false);
+            try {
+                ArrayList<Integer> idsAMover = new ArrayList<>();
+                try (PreparedStatement stm = con.prepareStatement(sqlSeleccionar)) {
+                    stm.setInt(1, idEliminado);
+                    try (ResultSet rs = stm.executeQuery()) {
+                        while (rs.next()) {
+                            idsAMover.add(rs.getInt("idIngredientes"));
+                        }
+                    }
+                }
+
+                try (PreparedStatement stm = con.prepareStatement(sqlActualizar)) {
+                    for (int idActual : idsAMover) {
+                        stm.setInt(1, idActual - 1);
+                        stm.setInt(2, idActual);
+                        stm.executeUpdate();
+                    }
+                }
+
+                con.commit();
+            } catch (SQLException ex) {
+                con.rollback();
+                System.getLogger(Ingredientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                return false;
+            } finally {
+                con.setAutoCommit(true);
+            }
+        } catch (SQLException ex) {
+            System.getLogger(Ingredientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            return false;
+        }
+
+        ajustarAutoIncrement();
+        return true;
+    }
+
+    // Ajuste best-effort del contador AUTO_INCREMENT tras renumerar: si falla no
+    // afecta la integridad de los datos, en el peor caso el próximo ID no es el mínimo posible.
+    private void ajustarAutoIncrement() {
+        String sqlMax = "SELECT MAX(idIngredientes) AS maximo FROM ingredientes";
+        try (Connection con = getCon();
+             Statement stmSelect = con.createStatement();
+             ResultSet rs = stmSelect.executeQuery(sqlMax)) {
+            int maximo = 0;
+            if (rs.next()) {
+                maximo = rs.getInt("maximo");
+            }
+            try (Statement stmAlter = con.createStatement()) {
+                stmAlter.executeUpdate("ALTER TABLE ingredientes AUTO_INCREMENT = " + (maximo + 1));
+            }
+        } catch (SQLException ex) {
+            System.getLogger(Ingredientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
+
     public Ingredientes consultaPorId(int idIngredientes) {
         String sql = "SELECT * FROM ingredientes WHERE idIngredientes=?";
         try (Connection con = getCon(); PreparedStatement stm = con.prepareStatement(sql)) {

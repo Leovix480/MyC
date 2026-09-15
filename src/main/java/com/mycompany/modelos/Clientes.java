@@ -69,14 +69,22 @@ public class Clientes extends Conexion implements Sentencias{
     
     @Override
     public boolean insertar() {
-        String sql = "INSERT INTO cliente (idCliente, nombre, apellido, direccion, telefono) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement stm = getCon().prepareStatement(sql);) {
-            stm.setInt(1, this.idCliente);
-            stm.setString(2, this.nombre);
-            stm.setString(3, this.apellido);
-            stm.setString(4, this.direccion);
-            stm.setString(5, this.telefono);
+        // idCliente es AUTO_INCREMENT en MySQL: no se envía manualmente,
+        // se recupera la clave generada (mismo patrón que Recetas.insertar() y Venta.insertar()).
+        String sql = "INSERT INTO cliente (nombre, apellido, direccion, telefono) VALUES (?, ?, ?, ?)";
+        try (Connection con = getCon();
+             PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stm.setString(1, this.nombre);
+            stm.setString(2, this.apellido);
+            stm.setString(3, this.direccion);
+            stm.setString(4, this.telefono);
             stm.executeUpdate();
+
+            try (ResultSet rs = stm.getGeneratedKeys()) {
+                if (rs.next()) {
+                    this.idCliente = rs.getInt(1);
+                }
+            }
             return true;
         } catch (SQLException ex) {
             System.getLogger(Clientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -146,5 +154,75 @@ public class Clientes extends Conexion implements Sentencias{
             System.getLogger(Clientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         return cliente;
+    }
+
+    /**
+     * Vuelve consecutivos los IDs de cliente posteriores al recién eliminado,
+     * corriendo cada uno una posición hacia abajo (si se borró el 2, el 3 pasa
+     * a ser 2, el 4 pasa a ser 3, etc.). Las filas de venta que referencian a
+     * los clientes movidos se actualizan solas gracias a ON UPDATE CASCADE en
+     * fk_Venta_Cliente1 (ver migraciones/001_cascade_para_renumeracion.sql).
+     * Se ejecuta en una sola transacción: si algo falla no se aplica ningún cambio,
+     * y nunca se propaga como error del borrado (es una mejora "best effort").
+     */
+    public boolean renumerarDespuesDeEliminar(int idEliminado) {
+        String sqlSeleccionar = "SELECT idCliente FROM cliente WHERE idCliente > ? ORDER BY idCliente ASC";
+        String sqlActualizar = "UPDATE cliente SET idCliente = ? WHERE idCliente = ?";
+
+        try (Connection con = getCon()) {
+            con.setAutoCommit(false);
+            try {
+                ArrayList<Integer> idsAMover = new ArrayList<>();
+                try (PreparedStatement stm = con.prepareStatement(sqlSeleccionar)) {
+                    stm.setInt(1, idEliminado);
+                    try (ResultSet rs = stm.executeQuery()) {
+                        while (rs.next()) {
+                            idsAMover.add(rs.getInt("idCliente"));
+                        }
+                    }
+                }
+
+                try (PreparedStatement stm = con.prepareStatement(sqlActualizar)) {
+                    for (int idActual : idsAMover) {
+                        stm.setInt(1, idActual - 1);
+                        stm.setInt(2, idActual);
+                        stm.executeUpdate();
+                    }
+                }
+
+                con.commit();
+            } catch (SQLException ex) {
+                con.rollback();
+                System.getLogger(Clientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                return false;
+            } finally {
+                con.setAutoCommit(true);
+            }
+        } catch (SQLException ex) {
+            System.getLogger(Clientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            return false;
+        }
+
+        ajustarAutoIncrement();
+        return true;
+    }
+
+    // Ajuste best-effort del contador AUTO_INCREMENT tras renumerar: si falla no
+    // afecta la integridad de los datos, en el peor caso el próximo ID no es el mínimo posible.
+    private void ajustarAutoIncrement() {
+        String sqlMax = "SELECT MAX(idCliente) AS maximo FROM cliente";
+        try (Connection con = getCon();
+             Statement stmSelect = con.createStatement();
+             ResultSet rs = stmSelect.executeQuery(sqlMax)) {
+            int maximo = 0;
+            if (rs.next()) {
+                maximo = rs.getInt("maximo");
+            }
+            try (Statement stmAlter = con.createStatement()) {
+                stmAlter.executeUpdate("ALTER TABLE cliente AUTO_INCREMENT = " + (maximo + 1));
+            }
+        } catch (SQLException ex) {
+            System.getLogger(Clientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 }

@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -44,6 +45,7 @@ public class Seleccionar_clienteController implements Initializable {
     ObservableList<Clientes> datos;
     ObservableList<Clientes> datosBuscados;
     Clientes cliente = new Clientes();
+    int idSeleccionado;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -85,12 +87,24 @@ public class Seleccionar_clienteController implements Initializable {
         if (seleccionado == null) {
             return;
         }
+        idSeleccionado = seleccionado.getIdCliente();
         ventasSingleton.getInstance().setCodCliente(seleccionado.getIdCliente());
     }
 
     @FXML
     private void aceptar(ActionEvent event) {
+        if (idSeleccionado <= 0) {
+            mostrarAlerta("Alerta: Debe seleccionar un cliente antes de continuar.");
+            return;
+        }
         Stage stage = (Stage) btnAceptar.getScene().getWindow();
         stage.close();
+    }
+
+    private void mostrarAlerta(String msg) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
 }
