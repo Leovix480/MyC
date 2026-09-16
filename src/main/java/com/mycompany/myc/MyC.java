@@ -26,6 +26,9 @@ public class MyC extends Application{
             stage.setScene(escena);
             stage.setTitle("Sistema de gestion de Stock");
             stage.show();
+            // La ventana puede agrandarse, pero nunca achicarse por debajo del tamaño inicial
+            stage.setMinWidth(stage.getWidth());
+            stage.setMinHeight(stage.getHeight());
         }else{
             Alert alerta= new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Error de conexion");

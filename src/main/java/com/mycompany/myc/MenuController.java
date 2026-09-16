@@ -94,6 +94,11 @@ public class MenuController implements Initializable {
             stage.setTitle(titulo);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
+            // La ventana puede agrandarse, pero nunca achicarse por debajo del tamaño inicial de la vista
+            stage.setOnShown(e -> {
+                stage.setMinWidth(stage.getWidth());
+                stage.setMinHeight(stage.getHeight());
+            });
             stage.showAndWait();
             // Al cerrar la ventana modal se vuelve al menú: refrescar la alerta por si cambió el stock
             actualizarAlertaStock();

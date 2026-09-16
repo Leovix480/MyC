@@ -1,0 +1,134 @@
+/* =====================================================================
+   estilos.css — Hoja de estilos de MyC (Miel y Canela)
+
+   Reemplaza los estilos que antes estaban escritos "inline" en cada nodo
+   de los FXML. Cada FXML la carga con  stylesheets="@estilos.css"  en su
+   nodo raíz, así que no hace falta cargarla desde Java.
+
+   Paleta:
+     #FEEBE7  fondo general / relleno de campos
+     #FFF6F3  fondo de los paneles ("cards")
+     #F4C6B8  botones normales / base de tablas
+     #E8A798  bordes
+     #D98572  botones de acento / selección
+     #5C3A34  texto
+   ===================================================================== */
+
+/* ---------- Raíz de cada vista ---------- */
+.raiz {
+    -fx-background-color: #FEEBE7;
+    -fx-border-color: #E8A798;
+    -fx-border-width: 3;
+}
+
+/* ---------- Paneles redondeados que agrupan controles ---------- */
+.card {
+    -fx-background-color: #FFF6F3;
+    -fx-border-color: #E8A798;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+/* El panel de navegación del menú tiene el radio un poco más grande */
+.card-menu {
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+}
+
+/* ---------- Campos de entrada (TextField, ComboBox, DatePicker) ---------- */
+.campo {
+    -fx-background-color: #FEEBE7;
+    -fx-border-color: #E8A798;
+    -fx-border-width: 1;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-text-fill: #5C3A34;
+}
+
+/* Variante en negrita (ej. el total del pedido) */
+.campo-negrita {
+    -fx-font-weight: bold;
+}
+
+/* ---------- Botones ---------- */
+.boton {
+    -fx-background-color: #F4C6B8;
+    -fx-border-color: #E8A798;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-text-fill: #5C3A34;
+    -fx-font-weight: bold;
+}
+
+/* Botón de acento (Eliminar, Agregar, Aceptar, Cerrar sesión, Imprimir) */
+.boton-acento {
+    -fx-background-color: #D98572;
+    -fx-border-color: #5C3A34;
+    -fx-border-width: 1;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Los botones del menú principal usan una letra un poco más grande */
+.boton-menu {
+    -fx-font-size: 12;
+}
+
+/* ---------- Etiquetas ---------- */
+.etiqueta {
+    -fx-text-fill: #5C3A34;
+}
+
+.etiqueta-negrita {
+    -fx-text-fill: #5C3A34;
+    -fx-font-weight: bold;
+}
+
+/* Título de sección (ej. "Cantidad a usar:") */
+.etiqueta-titulo {
+    -fx-text-fill: #5C3A34;
+    -fx-font-weight: bold;
+    -fx-font-size: 13;
+}
+
+/* Texto secundario pequeño (ej. total con IVA) */
+.etiqueta-secundaria {
+    -fx-text-fill: #5C3A34;
+    -fx-font-size: 10;
+}
+
+/* Enlace "Acerca del sistema" */
+.enlace {
+    -fx-text-fill: #5C3A34;
+    -fx-font-size: 11;
+    -fx-underline: true;
+}
+
+/* Alerta de stock mínimo del menú */
+.alerta-stock {
+    -fx-background-color: #FFF6F3;
+    -fx-border-color: #D98572;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 10 12 10 12;
+    -fx-text-fill: #5C3A34;
+    -fx-font-weight: bold;
+    -fx-font-size: 12;
+    -fx-text-alignment: center;
+}
+
+/* ---------- Tablas ---------- */
+.tabla {
+    -fx-control-inner-background: #FFF6F3;
+    -fx-control-inner-background-alt: -fx-control-inner-background;
+    -fx-base: #F4C6B8;
+    -fx-accent: #D98572;
+    -fx-selection-bar: #F4C6B8;
+    -fx-table-cell-border-color: #E8A798;
+    -fx-box-border: #E8A798;
+}

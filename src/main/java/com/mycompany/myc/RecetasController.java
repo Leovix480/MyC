@@ -123,6 +123,11 @@ public class RecetasController implements Initializable {
             stage.setTitle(titulo);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
+            // La ventana puede agrandarse, pero nunca achicarse por debajo del tamaño inicial de la vista
+            stage.setOnShown(e -> {
+                stage.setMinWidth(stage.getWidth());
+                stage.setMinHeight(stage.getHeight());
+            });
             stage.showAndWait();
         } catch (IOException ex) {
             System.getLogger(RecetasController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);

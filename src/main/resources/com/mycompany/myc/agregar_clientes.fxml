@@ -1,30 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.Seleccionar_clienteController">
+<AnchorPane fx:id="root" minHeight="400.0" minWidth="500.0" prefHeight="400.0" prefWidth="500.0" styleClass="raiz" stylesheets="@estilos.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.Seleccionar_clienteController">
    <children>
-
-      <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="330.0" prefWidth="472.0" style="-fx-background-color: #FFF6F3; -fx-border-color: #E8A798; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
+      <VBox spacing="12.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <padding>
+            <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+         </padding>
          <children>
-            <TextField fx:id="txtBuscar" layoutX="12.0" layoutY="12.0" onKeyReleased="#buscar" prefHeight="26.0" prefWidth="448.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6; -fx-text-fill: #5C3A34;" />
-            <TableView fx:id="tablaClientes" layoutX="12.0" layoutY="48.0" onMouseClicked="#mostrarFila" prefHeight="270.0" prefWidth="448.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
-              <columns>
-                <TableColumn fx:id="columID" prefWidth="45.0" text="ID" />
-                <TableColumn fx:id="columNombre" prefWidth="110.0" text="Nombre" />
-                <TableColumn fx:id="columApellido" prefWidth="110.0" text="Apellido" />
-                <TableColumn fx:id="columDireccion" prefWidth="98.0" text="Direccion" />
-                <TableColumn fx:id="columCelular" prefWidth="85.0" text="Celular" />
-              </columns>
-            </TableView>
+
+            <!-- Búsqueda y listado de clientes -->
+            <VBox spacing="10.0" styleClass="card" VBox.vgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+               </padding>
+               <children>
+                  <TextField fx:id="txtBuscar" maxWidth="Infinity" onKeyReleased="#buscar" prefHeight="26.0" styleClass="campo" />
+                  <TableView fx:id="tablaClientes" maxHeight="Infinity" maxWidth="Infinity" onMouseClicked="#mostrarFila" styleClass="tabla" VBox.vgrow="ALWAYS">
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                     <columns>
+                        <TableColumn fx:id="columID" minWidth="40.0" prefWidth="45.0" text="ID" />
+                        <TableColumn fx:id="columNombre" minWidth="80.0" prefWidth="110.0" text="Nombre" />
+                        <TableColumn fx:id="columApellido" minWidth="80.0" prefWidth="110.0" text="Apellido" />
+                        <TableColumn fx:id="columDireccion" minWidth="80.0" prefWidth="98.0" text="Direccion" />
+                        <TableColumn fx:id="columCelular" minWidth="70.0" prefWidth="85.0" text="Celular" />
+                     </columns>
+                  </TableView>
+               </children>
+            </VBox>
+
+            <!-- Botón Aceptar alineado a la derecha -->
+            <HBox alignment="CENTER_RIGHT">
+               <children>
+                  <Button fx:id="btnAceptar" minWidth="96.0" mnemonicParsing="false" onAction="#aceptar" prefHeight="30.0" prefWidth="96.0" styleClass="boton-acento" text="Aceptar" />
+               </children>
+            </HBox>
+
          </children>
-      </AnchorPane>
-
-      <Button fx:id="btnAceptar" layoutX="390.0" layoutY="356.0" mnemonicParsing="false" onAction="#aceptar" prefHeight="30.0" prefWidth="96.0" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" text="Aceptar" />
-
+      </VBox>
    </children>
 </AnchorPane>

@@ -1,53 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="650.0" style="-fx-border-color: #E8A798; -fx-border-width: 3; -fx-background-color: #FEEBE7;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.RecetasController">
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="root" minHeight="500.0" minWidth="650.0" prefHeight="500.0" prefWidth="650.0" styleClass="raiz" stylesheets="@estilos.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.RecetasController">
    <children>
-      <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="470.0" prefWidth="230.0" style="-fx-border-color: #E8A798; -fx-background-color: #FFF6F3; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
+      <HBox spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <padding>
+            <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+         </padding>
          <children>
-            <TextField fx:id="txtBuscar" layoutX="12.0" layoutY="14.0" onKeyReleased="#buscar" prefHeight="26.0" prefWidth="205.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6; -fx-text-fill: #5C3A34;" />
-            <TableView fx:id="tablaRecetas" layoutX="15.0" layoutY="52.0" onMouseClicked="#mostrarFila" prefHeight="401.0" prefWidth="200.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
-              <columns>
-                <TableColumn fx:id="columID" prefWidth="55.99997329711914" text="ID" />
-                <TableColumn fx:id="columNombre" prefWidth="143.20004272460938" text="Nombre" />
-              </columns>
-            </TableView>
+
+            <!-- Columna izquierda: búsqueda y listado de recetas -->
+            <VBox minWidth="200.0" prefWidth="230.0" spacing="10.0" styleClass="card" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="12.0" left="12.0" right="12.0" top="14.0" />
+               </padding>
+               <children>
+                  <TextField fx:id="txtBuscar" maxWidth="Infinity" onKeyReleased="#buscar" prefHeight="26.0" styleClass="campo" />
+                  <TableView fx:id="tablaRecetas" maxHeight="Infinity" maxWidth="Infinity" onMouseClicked="#mostrarFila" styleClass="tabla" VBox.vgrow="ALWAYS">
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                     <columns>
+                        <TableColumn fx:id="columID" minWidth="40.0" prefWidth="56.0" text="ID" />
+                        <TableColumn fx:id="columNombre" minWidth="90.0" prefWidth="143.0" text="Nombre" />
+                     </columns>
+                  </TableView>
+               </children>
+            </VBox>
+
+            <!-- Columna derecha: descripción, ingredientes de la receta y formulario -->
+            <VBox prefWidth="386.0" spacing="10.0" HBox.hgrow="ALWAYS">
+               <children>
+
+                  <!-- Descripción -->
+                  <VBox spacing="6.0" styleClass="card">
+                     <padding>
+                        <Insets bottom="12.0" left="14.0" right="14.0" top="12.0" />
+                     </padding>
+                     <children>
+                        <Label minWidth="-Infinity" styleClass="etiqueta" text="Descripcion:" />
+                        <TextField fx:id="txtDesc" disable="true" maxWidth="Infinity" minHeight="126.0" prefHeight="126.0" styleClass="campo" />
+                     </children>
+                  </VBox>
+
+                  <!-- Ingredientes de la receta -->
+                  <HBox spacing="10.0" styleClass="card" VBox.vgrow="ALWAYS">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                     <children>
+                        <TableView fx:id="tablaDI" maxHeight="Infinity" maxWidth="Infinity" onMouseClicked="#mostrarFilaDI" styleClass="tabla" HBox.hgrow="ALWAYS">
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                           <columns>
+                              <TableColumn fx:id="columDINombre" minWidth="80.0" prefWidth="111.0" text="Nombre" />
+                              <TableColumn fx:id="columDICantidad" minWidth="60.0" prefWidth="87.0" text="Cantidad" />
+                           </columns>
+                        </TableView>
+                        <VBox alignment="TOP_CENTER" minWidth="90.0" spacing="14.0">
+                           <padding>
+                              <Insets top="20.0" />
+                           </padding>
+                           <children>
+                              <Button fx:id="btnDIAdd" minWidth="-Infinity" mnemonicParsing="false" onAction="#abrirCIR" styleClass="boton" text="Añadir" />
+                              <Button fx:id="btnDIEliminar" minWidth="-Infinity" mnemonicParsing="false" onAction="#eliminarIngCant" styleClass="boton-acento" text="Eliminar" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+
+                  <!-- Formulario de alta / edición -->
+                  <VBox spacing="14.0" styleClass="card">
+                     <padding>
+                        <Insets bottom="12.0" left="12.0" right="12.0" top="14.0" />
+                     </padding>
+                     <children>
+                        <GridPane hgap="8.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="NEVER" />
+                              <ColumnConstraints hgrow="ALWAYS" />
+                              <ColumnConstraints hgrow="NEVER" />
+                              <ColumnConstraints hgrow="ALWAYS" />
+                           </columnConstraints>
+                           <children>
+                              <Label minWidth="-Infinity" styleClass="etiqueta" text="Nombre:" GridPane.columnIndex="0" />
+                              <TextField fx:id="txtNombre" disable="true" maxWidth="Infinity" prefHeight="26.0" styleClass="campo" GridPane.columnIndex="1" />
+                              <Label minWidth="-Infinity" styleClass="etiqueta" text="Precio:" GridPane.columnIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="8.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <TextField fx:id="txtPrecio" disable="true" maxWidth="Infinity" prefHeight="26.0" styleClass="campo" GridPane.columnIndex="3" />
+                           </children>
+                        </GridPane>
+                        <HBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <Button fx:id="btnAdd" minWidth="-Infinity" mnemonicParsing="false" onAction="#add" styleClass="boton" text="Añadir" />
+                              <Button fx:id="btnEditar" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#editar" styleClass="boton" text="Editar" />
+                              <Button fx:id="btnGuardar" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#guardar" styleClass="boton" text="Guardar" />
+                              <Button fx:id="btnElimnar" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#eliminar" styleClass="boton-acento" text="Eliminar" />
+                              <Button fx:id="btnCancelar" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelar" styleClass="boton" text="Cancelar" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+
+               </children>
+            </VBox>
+
          </children>
-      </AnchorPane>
-      <AnchorPane layoutX="254.0" layoutY="351.0" prefHeight="134.0" prefWidth="386.0" style="-fx-border-color: #E8A798; -fx-background-color: #FFF6F3; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
-         <children>
-            <Label layoutX="33.0" layoutY="37.0" text="Nombre:" style="-fx-text-fill: #5C3A34;" />
-            <TextField fx:id="txtNombre" disable="true" layoutX="81.0" layoutY="32.0" prefHeight="26.0" prefWidth="106.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
-            <Label layoutX="214.0" layoutY="36.0" text="Precio:" style="-fx-text-fill: #5C3A34;" />
-            <TextField fx:id="txtPrecio" disable="true" layoutX="250.0" layoutY="32.0" prefHeight="26.0" prefWidth="106.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
-            <Button fx:id="btnAdd" layoutX="12.0" layoutY="84.0" mnemonicParsing="false" onAction="#add" text="Añadir" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-            <Button fx:id="btnEditar" disable="true" layoutX="88.0" layoutY="84.0" mnemonicParsing="false" onAction="#editar" text="Editar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-            <Button fx:id="btnElimnar" disable="true" layoutX="241.0" layoutY="84.0" mnemonicParsing="false" onAction="#eliminar" text="Eliminar" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" />
-            <Button fx:id="btnGuardar" disable="true" layoutX="161.0" layoutY="84.0" mnemonicParsing="false" onAction="#guardar" text="Guardar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-            <Button fx:id="btnCancelar" disable="true" layoutX="319.0" layoutY="84.0" mnemonicParsing="false" onAction="#cancelar" text="Cancelar" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="256.0" layoutY="14.0" prefHeight="169.0" prefWidth="386.0" style="-fx-border-color: #E8A798; -fx-background-color: #FFF6F3; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
-         <children>
-            <Label layoutX="14.0" layoutY="14.0" text="Descripcion:" style="-fx-text-fill: #5C3A34;" />
-            <TextField fx:id="txtDesc" disable="true" layoutX="14.0" layoutY="32.0" prefHeight="126.0" prefWidth="362.0" style="-fx-background-color: #FEEBE7; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 6; -fx-border-radius: 6;" />
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="255.0" layoutY="188.0" prefHeight="157.0" prefWidth="386.0" style="-fx-border-color: #E8A798; -fx-background-color: #FFF6F3; -fx-border-width: 1.5; -fx-background-radius: 10; -fx-border-radius: 10;">
-         <children>
-            <TableView fx:id="tablaDI" layoutX="11.0" layoutY="8.0" onMouseClicked="#mostrarFilaDI" prefHeight="142.0" prefWidth="200.0" style="-fx-control-inner-background: #FFF6F3; -fx-control-inner-background-alt: -fx-control-inner-background; -fx-base: #F4C6B8; -fx-accent: #D98572; -fx-selection-bar: #F4C6B8; -fx-table-cell-border-color: #E8A798; -fx-box-border: #E8A798;">
-              <columns>
-                <TableColumn fx:id="columDINombre" prefWidth="111.20001220703125" text="Nombre" />
-                <TableColumn fx:id="columDICantidad" prefWidth="87.19998168945312" text="Cantidad" />
-              </columns>
-            </TableView>
-            <Button fx:id="btnDIAdd" layoutX="271.0" layoutY="33.0" mnemonicParsing="false" onAction="#abrirCIR" text="Añadir" style="-fx-background-color: #F4C6B8; -fx-border-color: #E8A798; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: #5C3A34; -fx-font-weight: bold;" />
-            <Button fx:id="btnDIEliminar" layoutX="271.0" layoutY="90.0" mnemonicParsing="false" onAction="#eliminarIngCant" text="Eliminar" style="-fx-background-color: #D98572; -fx-border-color: #5C3A34; -fx-border-width: 1; -fx-background-radius: 8; -fx-border-radius: 8; -fx-text-fill: white; -fx-font-weight: bold;" />
-         </children>
-      </AnchorPane>
+      </HBox>
    </children>
 </AnchorPane>
