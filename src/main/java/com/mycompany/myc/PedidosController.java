@@ -116,7 +116,7 @@ public class PedidosController implements Initializable {
     Map<Integer, Integer> cantidadPorProducto = new HashMap<>();
     Map<Integer, String> nombreClientePorVenta = new HashMap<>();
 
-    int idClienteSeleccionado;
+    String rucClienteSeleccionado;
     int idProductoSeleccionadoParaAgregar;
     int idProductoEnEdicion;
     int idVentaSeleccionada;
@@ -186,7 +186,7 @@ public class PedidosController implements Initializable {
         ArrayList<Clientes> todosClientes = cliente.consulta();
         for (Venta v : datosVentas) {
             for (Clientes c : todosClientes) {
-                if (c.getIdCliente() == v.getIdCliente()) {
+                if (c.getRuc().equals(v.getRuc())) {
                     nombreClientePorVenta.put(v.getIdVenta(), c.getNombre() + " " + c.getApellido());
                     break;
                 }
@@ -233,10 +233,10 @@ public class PedidosController implements Initializable {
         modoSoloLectura = true;
         idVentaSeleccionada = v.getIdVenta();
 
-        Clientes c = buscarClientePorId(v.getIdCliente());
+        Clientes c = buscarClientePorRuc(v.getRuc());
         if (c != null) {
             txtNombreCliente.setText(c.getNombre() + " " + c.getApellido());
-            idClienteSeleccionado = c.getIdCliente();
+            rucClienteSeleccionado = c.getRuc();
             dpFecha.setValue(v.getFecha().toLocalDate());
         }
 
@@ -260,10 +260,10 @@ public class PedidosController implements Initializable {
         btnCancelar.setDisable(false);
     }
 
-    private Clientes buscarClientePorId(int idCliente) {
+    private Clientes buscarClientePorRuc(String ruc) {
         ArrayList<Clientes> todos = cliente.consulta();
         for (Clientes c : todos) {
-            if (c.getIdCliente() == idCliente) {
+            if (c.getRuc().equals(ruc)) {
                 return c;
             }
         }
@@ -285,11 +285,11 @@ public class PedidosController implements Initializable {
         }
         abrirFxml("agregar_clientes.fxml", "Seleccionar cliente");
 
-        int idSel = ventasSingleton.getInstance().getCodCliente();
-        if (idSel > 0) {
-            Clientes c = buscarClientePorId(idSel);
+        String rucSel = ventasSingleton.getInstance().getRucCliente();
+        if (rucSel != null && !rucSel.isEmpty()) {
+            Clientes c = buscarClientePorRuc(rucSel);
             if (c != null) {
-                idClienteSeleccionado = c.getIdCliente();
+                rucClienteSeleccionado = c.getRuc();
                 txtNombreCliente.setText(c.getNombre() + " " + c.getApellido());
             }
         }
@@ -558,7 +558,7 @@ public class PedidosController implements Initializable {
             return;
         }
 
-        if (idClienteSeleccionado <= 0) {
+        if (rucClienteSeleccionado == null || rucClienteSeleccionado.isEmpty()) {
             mostrarAlerta("Seleccioná un cliente para la venta.");
             return;
         }
@@ -578,7 +578,7 @@ public class PedidosController implements Initializable {
         }
         
         venta.setFecha(dpFecha.getValue().atStartOfDay());
-        venta.setIdCliente(idClienteSeleccionado);
+        venta.setRuc(rucClienteSeleccionado);
         venta.setTipoPago(tipoPago);
         venta.setTotalVenta(calcularTotalActual());
 
@@ -644,7 +644,7 @@ public class PedidosController implements Initializable {
 
     private void limpiarVentaActual() {
         cantidadPorProducto.clear();
-        idClienteSeleccionado = 0;
+        rucClienteSeleccionado = null;
         idProductoSeleccionadoParaAgregar = 0;
         idProductoEnEdicion = 0;
         idVentaSeleccionada = 0; 
@@ -741,7 +741,7 @@ public class PedidosController implements Initializable {
     @FXML
     private void factura(ActionEvent event) {
 
-        if (idClienteSeleccionado <= 0 || txtNombreCliente.getText().trim().isEmpty()) {
+        if (rucClienteSeleccionado == null || rucClienteSeleccionado.isEmpty() || txtNombreCliente.getText().trim().isEmpty()) {
             mostrarAlerta("Seleccioná un cliente para generar la factura.");
             return;
         }
@@ -781,11 +781,12 @@ public class PedidosController implements Initializable {
                     = new net.sf.jasperreports.engine.data.JRMapCollectionDataSource(filas);
 
             // 2. Parámetros de cabecera tomados de la vista
-            Clientes c = buscarClientePorId(idClienteSeleccionado);
+            Clientes c = buscarClientePorRuc(rucClienteSeleccionado);
             String tipoPago = cmbTipoPago.getValue();
 
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("cliente", txtNombreCliente.getText());
+            parametros.put("rucCliente", c != null && c.getRuc() != null ? c.getRuc() : "");
             parametros.put("direccion", c != null && c.getDireccion() != null ? c.getDireccion() : "");
             parametros.put("telefono", c != null && c.getTelefono() != null ? c.getTelefono() : "");
             parametros.put("fecha", dpFecha.getValue().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")));

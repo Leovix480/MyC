@@ -123,6 +123,23 @@ public class DetalleReceta extends Conexion implements Sentencias {
         return detalles;
     }
 
+    // Borra de una sola vez todos los ingredientes cargados en una receta. Se usa antes
+    // de eliminar la receta, porque fk_Ingredientes_has_Recetas_Recetas1 está en
+    // ON DELETE NO ACTION y bloquearía el borrado mientras queden filas apuntándola.
+    // Devuelve true aunque la receta no tenga ingredientes: lo que importa es que quede vacía.
+    public boolean eliminarPorReceta(int idReceta) {
+        String sql = "DELETE FROM detalle_receta WHERE idRecetas=?";
+        try (Connection con = getCon();
+             PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setInt(1, idReceta);
+            stm.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            System.getLogger(DetalleReceta.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            return false;
+        }
+    }
+
     // Método extra: traer solo los ingredientes de una receta específica
     public ArrayList<DetalleReceta> consultaPorReceta(int idReceta) {
         ArrayList<DetalleReceta> detalles = new ArrayList<>();

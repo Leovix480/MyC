@@ -222,6 +222,11 @@ public class RecetasController implements Initializable {
     @FXML
     private void cancelar(ActionEvent event) {
         limpiar();
+        id = 0;
+        codReceta = 0;
+        idIngredienteDI = 0;
+        btnDIEliminar.setDisable(true);
+        mostrarDI();
         txtNombre.setDisable(true);
         txtDesc.setDisable(true);
         btnCancelar.setDisable(true);
@@ -284,6 +289,11 @@ public class RecetasController implements Initializable {
                 return;
             }
             producto.renumerarDespuesDeEliminar(codProd);
+        }
+
+        if (!detalle.eliminarPorReceta(id)) {
+            mostrarAlerta("No se pudieron eliminar los ingredientes de la receta.");
+            return;
         }
 
         receta.setIdRecetas(id);

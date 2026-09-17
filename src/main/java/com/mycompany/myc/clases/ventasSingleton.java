@@ -11,8 +11,8 @@ package com.mycompany.myc.clases;
 public class ventasSingleton {
     private int codReceta;
     private int codIngrediente;
-    
-    private int codCliente;
+
+    private String rucCliente;
     private int codProducto;
     
     
@@ -24,12 +24,12 @@ public class ventasSingleton {
         return ventasSingletonHolder.INSTANCE;
     }
 
-    public int getCodCliente() {
-        return codCliente;
+    public String getRucCliente() {
+        return rucCliente;
     }
 
-    public void setCodCliente(int codCliente) {
-        this.codCliente = codCliente;
+    public void setRucCliente(String rucCliente) {
+        this.rucCliente = rucCliente;
     }
 
     public int getCodProducto() {

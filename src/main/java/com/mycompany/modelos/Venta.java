@@ -20,17 +20,17 @@ public class Venta extends Conexion implements Sentencias {
 
     private int idVenta;
     private LocalDateTime fecha;
-    private int idCliente;
+    private String ruc;
     private String tipoPago;
     private double totalVenta;
 
     public Venta() {
     }
 
-    public Venta(int idVenta, LocalDateTime fecha, int idCliente, String tipoPago, double totalVenta) {
+    public Venta(int idVenta, LocalDateTime fecha, String ruc, String tipoPago, double totalVenta) {
         this.idVenta = idVenta;
         this.fecha = fecha;
-        this.idCliente = idCliente;
+        this.ruc = ruc;
         this.tipoPago = tipoPago;
         this.totalVenta = totalVenta;
     }
@@ -51,12 +51,12 @@ public class Venta extends Conexion implements Sentencias {
         this.fecha = fecha;
     }
 
-    public int getIdCliente() {
-        return idCliente;
+    public String getRuc() {
+        return ruc;
     }
 
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
     }
 
     public String getTipoPago() {
@@ -77,10 +77,10 @@ public class Venta extends Conexion implements Sentencias {
 
     @Override
     public boolean insertar() {
-        String sql = "INSERT INTO venta (fecha, idCliente, tipoPago, totalVenta) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO venta (fecha, ruc, tipoPago, totalVenta) VALUES (?, ?, ?, ?)";
         try (Connection con = getCon(); PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stm.setTimestamp(1, Timestamp.valueOf(this.fecha));
-            stm.setInt(2, this.idCliente);
+            stm.setString(2, this.ruc);
             stm.setString(3, this.tipoPago);
             stm.setDouble(4, this.totalVenta);
             stm.executeUpdate();
@@ -99,10 +99,10 @@ public class Venta extends Conexion implements Sentencias {
 
     @Override
     public boolean editar() {
-        String sql = "UPDATE venta SET fecha=?, idCliente=?, tipoPago=?, totalVenta=? WHERE idVenta=?";
+        String sql = "UPDATE venta SET fecha=?, ruc=?, tipoPago=?, totalVenta=? WHERE idVenta=?";
         try (Connection con = getCon(); PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setTimestamp(1, Timestamp.valueOf(this.fecha));
-            stm.setInt(2, this.idCliente);
+            stm.setString(2, this.ruc);
             stm.setString(3, this.tipoPago);
             stm.setDouble(4, this.totalVenta);
             stm.setInt(5, this.idVenta);
@@ -135,10 +135,10 @@ public class Venta extends Conexion implements Sentencias {
             while (rs.next()) {
                 int idV = rs.getInt("idVenta");
                 LocalDateTime fec = rs.getTimestamp("fecha").toLocalDateTime();
-                int idCli = rs.getInt("idCliente");
+                String rucCli = rs.getString("ruc");
                 String tp = rs.getString("tipoPago");
                 double total = rs.getDouble("totalVenta");
-                Venta venta = new Venta(idV, fec, idCli, tp, total);
+                Venta venta = new Venta(idV, fec, rucCli, tp, total);
                 ventas.add(venta);
             }
         } catch (SQLException ex) {
@@ -148,19 +148,19 @@ public class Venta extends Conexion implements Sentencias {
     }
 
     // Método extra: traer solo las ventas de un cliente específico
-    public ArrayList<Venta> consultaPorCliente(int idCliente) {
+    public ArrayList<Venta> consultaPorCliente(String ruc) {
         ArrayList<Venta> ventas = new ArrayList<>();
-        String sql = "SELECT * FROM venta WHERE idCliente=?";
+        String sql = "SELECT * FROM venta WHERE ruc=?";
         try (Connection con = getCon(); PreparedStatement stm = con.prepareStatement(sql)) {
-            stm.setInt(1, idCliente);
+            stm.setString(1, ruc);
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
                     int idV = rs.getInt("idVenta");
                     LocalDateTime fec = rs.getTimestamp("fecha").toLocalDateTime();
-                    int idCli = rs.getInt("idCliente");
+                    String rucCli = rs.getString("ruc");
                     String tp = rs.getString("tipoPago");
                     double total = rs.getDouble("totalVenta");
-                    ventas.add(new Venta(idV, fec, idCli, tp, total));
+                    ventas.add(new Venta(idV, fec, rucCli, tp, total));
                 }
             }
         } catch (SQLException ex) {

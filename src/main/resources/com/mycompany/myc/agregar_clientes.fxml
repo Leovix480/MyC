@@ -29,7 +29,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                      <columns>
-                        <TableColumn fx:id="columID" minWidth="40.0" prefWidth="45.0" text="ID" />
+                        <TableColumn fx:id="columRuc" minWidth="70.0" prefWidth="85.0" text="RUC" />
                         <TableColumn fx:id="columNombre" minWidth="80.0" prefWidth="110.0" text="Nombre" />
                         <TableColumn fx:id="columApellido" minWidth="80.0" prefWidth="110.0" text="Apellido" />
                         <TableColumn fx:id="columDireccion" minWidth="80.0" prefWidth="98.0" text="Direccion" />

@@ -32,7 +32,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                      <columns>
-                        <TableColumn fx:id="columID" minWidth="34.0" prefWidth="34.0" text="ID" />
+                        <TableColumn fx:id="columRuc" minWidth="80.0" prefWidth="90.0" text="RUC" />
                         <TableColumn fx:id="columNombre" minWidth="90.0" prefWidth="147.0" text="Nombre" />
                         <TableColumn fx:id="columApellido" minWidth="90.0" prefWidth="156.0" text="Apellido" />
                         <TableColumn fx:id="columDireccion" minWidth="90.0" prefWidth="127.0" text="Direccion" />
@@ -57,24 +57,28 @@
                <rowConstraints>
                   <RowConstraints minHeight="26.0" vgrow="NEVER" />
                   <RowConstraints minHeight="26.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="26.0" vgrow="NEVER" />
                   <RowConstraints minHeight="30.0" vgrow="NEVER" />
                </rowConstraints>
                <children>
-                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                  <TextField fx:id="txtNombre" disable="true" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Direccion:" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-                  <TextField fx:id="txtDireccion" disable="true" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+                  <Label minWidth="-Infinity" styleClass="etiqueta" text="RUC:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                  <TextField fx:id="txtRuc" disable="true" maxWidth="Infinity" promptText="Máx. 10 caracteres" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Apellido:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                  <TextField fx:id="txtApellido" disable="true" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Celular:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                  <TextField fx:id="txtCelular" disable="true" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtNombre" disable="true" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Direccion:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtDireccion" disable="true" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="4" GridPane.rowIndex="1" />
 
-                  <Button fx:id="btnAdd" minWidth="-Infinity" mnemonicParsing="false" onAction="#add" styleClass="boton" text="Añadir" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                  <Button fx:id="btnEditar" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#editar" styleClass="boton" text="Editar" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                  <Button fx:id="btnGuardar" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#guardar" styleClass="boton" text="Guardar" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                  <Button fx:id="btnEliminar" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#eliminar" styleClass="boton-acento" text="Eliminar" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                  <Button fx:id="btnCancelar" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelar" styleClass="boton" text="Cancelar" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Apellido:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                  <TextField fx:id="txtApellido" disable="true" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Celular:" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                  <TextField fx:id="txtCelular" disable="true" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+
+                  <Button fx:id="btnAdd" minWidth="-Infinity" mnemonicParsing="false" onAction="#add" styleClass="boton" text="Añadir" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                  <Button fx:id="btnEditar" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#editar" styleClass="boton" text="Editar" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                  <Button fx:id="btnGuardar" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#guardar" styleClass="boton" text="Guardar" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                  <Button fx:id="btnEliminar" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#eliminar" styleClass="boton-acento" text="Eliminar" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                  <Button fx:id="btnCancelar" disable="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelar" styleClass="boton" text="Cancelar" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
                </children>
             </GridPane>
 

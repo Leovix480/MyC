@@ -33,7 +33,7 @@ public class Administrar_clientesController implements Initializable {
     @FXML
     private TableView<Clientes> tablaClientes;
     @FXML
-    private TableColumn<Clientes, Integer> columID;
+    private TableColumn<Clientes, String> columRuc;
     @FXML
     private TableColumn<Clientes, String> columNombre;
     @FXML
@@ -44,6 +44,8 @@ public class Administrar_clientesController implements Initializable {
     private TableColumn<Clientes, String> columCelular;
     @FXML
     private Button btnAdd;
+    @FXML
+    private TextField txtRuc;
     @FXML
     private TextField txtNombre;
     @FXML
@@ -64,7 +66,7 @@ public class Administrar_clientesController implements Initializable {
     ObservableList<Clientes> datos;
     ObservableList<Clientes> datosBuscados;
     Clientes clie=new Clientes();
-    int codCliente;
+    String rucSeleccionado;
 
 
     @Override
@@ -79,7 +81,7 @@ public class Administrar_clientesController implements Initializable {
 
     public void mostrarDatos(){
         datos=FXCollections.observableArrayList(clie.consulta());
-        columID.setCellValueFactory(new PropertyValueFactory<>("idCliente"));
+        columRuc.setCellValueFactory(new PropertyValueFactory<>("ruc"));
         columNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         columApellido.setCellValueFactory(new PropertyValueFactory<>("apellido"));
         columDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion"));
@@ -88,6 +90,7 @@ public class Administrar_clientesController implements Initializable {
     }
 
     public void limpiar(){
+        txtRuc.clear();
         txtNombre.clear();
         txtApellido.clear();
         txtDireccion.clear();
@@ -95,6 +98,7 @@ public class Administrar_clientesController implements Initializable {
     }
 
     public void habilitar(){
+        txtRuc.setDisable(false);
         txtNombre.setDisable(false);
         txtApellido.setDisable(false);
         txtDireccion.setDisable(false);
@@ -103,7 +107,7 @@ public class Administrar_clientesController implements Initializable {
 
     @FXML
     private void add(ActionEvent event) {
-        codCliente = 0;
+        rucSeleccionado = null;
         habilitar();
         btnEliminar.setDisable(true);
         btnEditar.setDisable(true);
@@ -114,11 +118,31 @@ public class Administrar_clientesController implements Initializable {
     // Valida los campos del formulario antes de insertar o editar un cliente.
     // Devuelve true si todos los datos son válidos; si no, muestra una alerta y devuelve false.
     private boolean validarDatos() {
+        String ruc = txtRuc.getText();
         String nom = txtNombre.getText();
         String ape = txtApellido.getText();
         String dir = txtDireccion.getText();
         String tel = txtCelular.getText();
 
+        if (ruc == null || ruc.trim().isEmpty()) {
+            mostrarAlerta("Alerta: El RUC del cliente no puede estar vacío.");
+            return false;
+        }
+        if (ruc.trim().length() > 10) {
+            mostrarAlerta("Alerta: El RUC no puede superar los 10 caracteres.");
+            return false;
+        }
+        if (!ruc.trim().matches("[0-9]+(-[0-9])?")) {
+            mostrarAlerta("Alerta: El RUC solo puede contener números y, opcionalmente, un guión con el dígito verificador (ej: 80012345-6).");
+            return false;
+        }
+        // El RUC es la clave primaria: al dar de alta no puede repetirse, y al editar
+        // solo se controla si el usuario lo cambió por uno que ya pertenece a otro cliente.
+        boolean rucCambiado = rucSeleccionado == null || !ruc.trim().equals(rucSeleccionado);
+        if (rucCambiado && clie.existeRuc(ruc.trim())) {
+            mostrarAlerta("Alerta: Ya existe un cliente con el RUC " + ruc.trim() + ".");
+            return false;
+        }
         if (nom == null || nom.trim().isEmpty()) {
             mostrarAlerta("Alerta: El nombre del cliente no puede estar vacío.");
             return false;
@@ -168,13 +192,14 @@ public class Administrar_clientesController implements Initializable {
             return;
         }
 
+        clie.setRuc(txtRuc.getText().trim());
         clie.setNombre(Textos.capitalizarNombrePropio(txtNombre.getText()));
         clie.setDireccion(txtDireccion.getText().trim());
         clie.setApellido(Textos.capitalizarNombrePropio(txtApellido.getText()));
         clie.setTelefono(txtCelular.getText().trim());
 
         if (clie.insertar()) {
-            System.out.println("Cliente guardado correctamente. ID generado: " + clie.getIdCliente());
+            System.out.println("Cliente guardado correctamente. RUC: " + clie.getRuc());
             mostrarDatos();
             limpiar();
             cancelar(event);
@@ -186,6 +211,8 @@ public class Administrar_clientesController implements Initializable {
     @FXML
     private void cancelar(ActionEvent event) {
         limpiar();
+        rucSeleccionado = null;
+        txtRuc.setDisable(true);
         txtNombre.setDisable(true);
         txtApellido.setDisable(true);
         txtDireccion.setDisable(true);
@@ -203,12 +230,13 @@ public class Administrar_clientesController implements Initializable {
         if (c == null) {
             return;
         }
-        ventasSingleton.getInstance().setCodCliente(c.getIdCliente());
-        codCliente=ventasSingleton.getInstance().getCodCliente();
+        ventasSingleton.getInstance().setRucCliente(c.getRuc());
+        rucSeleccionado=ventasSingleton.getInstance().getRucCliente();
 
         ArrayList<Clientes> lista=c.consulta();
         for(Clientes cliente : lista){
-            if(cliente.getIdCliente()==codCliente){
+            if(cliente.getRuc().equals(rucSeleccionado)){
+                txtRuc.setText(cliente.getRuc());
                 txtNombre.setText(cliente.getNombre());
                 txtApellido.setText(cliente.getApellido());
                 txtDireccion.setText(cliente.getDireccion());
@@ -224,16 +252,15 @@ public class Administrar_clientesController implements Initializable {
 
     @FXML
     private void eliminar(ActionEvent event) {
-        if (codCliente <= 0) {
+        if (rucSeleccionado == null || rucSeleccionado.isEmpty()) {
             mostrarAlerta("Alerta: Seleccioná un cliente de la tabla para eliminar.");
             return;
         }
 
-        clie.setIdCliente(codCliente);
+        clie.setRuc(rucSeleccionado);
 
         if (clie.eliminar()) {
             System.out.println("Cliente eliminado correctamente.");
-            clie.renumerarDespuesDeEliminar(codCliente);
             mostrarDatos();
             limpiar();
             cancelar(event);
@@ -244,7 +271,7 @@ public class Administrar_clientesController implements Initializable {
 
     @FXML
     private void editar(ActionEvent event) {
-        if (codCliente <= 0) {
+        if (rucSeleccionado == null || rucSeleccionado.isEmpty()) {
             mostrarAlerta("Alerta: Seleccioná un cliente de la tabla para editar.");
             return;
         }
@@ -256,9 +283,9 @@ public class Administrar_clientesController implements Initializable {
         clie.setDireccion(txtDireccion.getText().trim());
         clie.setApellido(Textos.capitalizarNombrePropio(txtApellido.getText()));
         clie.setTelefono(txtCelular.getText().trim());
-        clie.setIdCliente(codCliente);
+        clie.setRuc(txtRuc.getText().trim());
 
-        if (clie.editar()) {
+        if (clie.editar(rucSeleccionado)) {
             System.out.println("Cliente editado correctamente.");
             mostrarDatos();
             limpiar();
@@ -277,7 +304,7 @@ public class Administrar_clientesController implements Initializable {
         else {
             datosBuscados.clear();
             for (Clientes dato : datos) {
-                String aux = String.valueOf(dato.getIdCliente());
+                String aux = dato.getRuc();
                 if (dato.getNombre().toLowerCase().contains(buscar.toLowerCase()) || aux.toLowerCase().contains(buscar.toLowerCase())) {
                     datosBuscados.add(dato);
                 }

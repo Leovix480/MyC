@@ -30,7 +30,7 @@ public class Seleccionar_clienteController implements Initializable {
     @FXML
     private TableView<Clientes> tablaClientes;
     @FXML
-    private TableColumn<Clientes, Integer> columID;
+    private TableColumn<Clientes, String> columRuc;
     @FXML
     private TableColumn<Clientes, String> columNombre;
     @FXML
@@ -45,7 +45,7 @@ public class Seleccionar_clienteController implements Initializable {
     ObservableList<Clientes> datos;
     ObservableList<Clientes> datosBuscados;
     Clientes cliente = new Clientes();
-    int idSeleccionado;
+    String rucSeleccionado;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -55,7 +55,7 @@ public class Seleccionar_clienteController implements Initializable {
 
     public void mostrarDatos() {
         datos = FXCollections.observableArrayList(cliente.consulta());
-        columID.setCellValueFactory(new PropertyValueFactory<>("idCliente"));
+        columRuc.setCellValueFactory(new PropertyValueFactory<>("ruc"));
         columNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         columApellido.setCellValueFactory(new PropertyValueFactory<>("apellido"));
         columDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion"));
@@ -73,7 +73,8 @@ public class Seleccionar_clienteController implements Initializable {
             datosBuscados.clear();
             for (Clientes c : datos) {
                 if (c.getNombre().toLowerCase().contains(buscar.toLowerCase())
-                        || c.getApellido().toLowerCase().contains(buscar.toLowerCase())) {
+                        || c.getApellido().toLowerCase().contains(buscar.toLowerCase())
+                        || c.getRuc().toLowerCase().contains(buscar.toLowerCase())) {
                     datosBuscados.add(c);
                 }
             }
@@ -87,13 +88,13 @@ public class Seleccionar_clienteController implements Initializable {
         if (seleccionado == null) {
             return;
         }
-        idSeleccionado = seleccionado.getIdCliente();
-        ventasSingleton.getInstance().setCodCliente(seleccionado.getIdCliente());
+        rucSeleccionado = seleccionado.getRuc();
+        ventasSingleton.getInstance().setRucCliente(seleccionado.getRuc());
     }
 
     @FXML
     private void aceptar(ActionEvent event) {
-        if (idSeleccionado <= 0) {
+        if (rucSeleccionado == null || rucSeleccionado.isEmpty()) {
             mostrarAlerta("Alerta: Debe seleccionar un cliente antes de continuar.");
             return;
         }

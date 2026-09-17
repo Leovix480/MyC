@@ -12,15 +12,15 @@ import java.util.ArrayList;
 public class Clientes extends Conexion implements Sentencias{
     private String nombre;
     private String apellido;
-    private int idCliente;
+    private String ruc;
     private String direccion;
     private String telefono;
 
     public Clientes() {
     }
 
-    public Clientes( int idCliente, String nombre, String apellido, String direccion, String telefono) {
-        this.idCliente = idCliente;
+    public Clientes( String ruc, String nombre, String apellido, String direccion, String telefono) {
+        this.ruc = ruc;
         this.nombre = nombre;
         this.apellido = apellido;
         this.direccion = direccion;
@@ -43,12 +43,12 @@ public class Clientes extends Conexion implements Sentencias{
         this.apellido = apellido;
     }
 
-    public int getIdCliente() {
-        return idCliente;
+    public String getRuc() {
+        return ruc;
     }
 
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
     }
 
     public String getDireccion() {
@@ -69,22 +69,16 @@ public class Clientes extends Conexion implements Sentencias{
     
     @Override
     public boolean insertar() {
-        // idCliente es AUTO_INCREMENT en MySQL: no se envía manualmente,
-        // se recupera la clave generada (mismo patrón que Recetas.insertar() y Venta.insertar()).
-        String sql = "INSERT INTO cliente (nombre, apellido, direccion, telefono) VALUES (?, ?, ?, ?)";
+        // El RUC lo carga el usuario en el formulario: es la clave primaria y no se genera sola.
+        String sql = "INSERT INTO cliente (ruc, nombre, apellido, direccion, telefono) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = getCon();
-             PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stm.setString(1, this.nombre);
-            stm.setString(2, this.apellido);
-            stm.setString(3, this.direccion);
-            stm.setString(4, this.telefono);
+             PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setString(1, this.ruc);
+            stm.setString(2, this.nombre);
+            stm.setString(3, this.apellido);
+            stm.setString(4, this.direccion);
+            stm.setString(5, this.telefono);
             stm.executeUpdate();
-
-            try (ResultSet rs = stm.getGeneratedKeys()) {
-                if (rs.next()) {
-                    this.idCliente = rs.getInt(1);
-                }
-            }
             return true;
         } catch (SQLException ex) {
             System.getLogger(Clientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -94,16 +88,26 @@ public class Clientes extends Conexion implements Sentencias{
 
     @Override
     public boolean editar() {
-        String sql = "UPDATE cliente SET nombre=?, apellido=?, direccion=?, telefono=? WHERE idCliente=?";
+        return editar(this.ruc);
+    }
+
+    /**
+     * Permite corregir también el RUC: rucOriginal identifica la fila a modificar
+     * y this.ruc es el valor nuevo. Las ventas del cliente siguen el cambio gracias
+     * al ON UPDATE CASCADE de fk_Venta_Cliente1 (ver migraciones/002_ruc_como_clave_cliente.sql).
+     */
+    public boolean editar(String rucOriginal) {
+        String sql = "UPDATE cliente SET ruc=?, nombre=?, apellido=?, direccion=?, telefono=? WHERE ruc=?";
 
         try (Connection con = getCon();
              PreparedStatement stm = con.prepareStatement(sql)) {
 
-            stm.setString(1, this.nombre);
-            stm.setString(2, this.apellido);
-            stm.setString(3, this.direccion);
-            stm.setString(4, this.telefono);
-            stm.setInt(5, this.idCliente);
+            stm.setString(1, this.ruc);
+            stm.setString(2, this.nombre);
+            stm.setString(3, this.apellido);
+            stm.setString(4, this.direccion);
+            stm.setString(5, this.telefono);
+            stm.setString(6, rucOriginal);
 
             int filas = stm.executeUpdate();
 
@@ -119,12 +123,12 @@ public class Clientes extends Conexion implements Sentencias{
 
     @Override
     public boolean eliminar() {
-        String sql = "DELETE FROM cliente WHERE idCliente = ?";
+        String sql = "DELETE FROM cliente WHERE ruc = ?";
 
         try (Connection con = getCon();
              PreparedStatement stm = con.prepareStatement(sql)) {
 
-            stm.setInt(1, this.idCliente);
+            stm.setString(1, this.ruc);
 
             int filas = stm.executeUpdate();
 
@@ -142,7 +146,7 @@ public class Clientes extends Conexion implements Sentencias{
         try (
                 Connection con = getCon(); Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql)) {
             while (rs.next()) {
-                int cod = rs.getInt("idCliente");
+                String cod = rs.getString("ruc");
                 String nom = rs.getString("nombre");
                 String ape = rs.getString("apellido");
                 String dir = rs.getString("direccion");
@@ -156,73 +160,18 @@ public class Clientes extends Conexion implements Sentencias{
         return cliente;
     }
 
-    /**
-     * Vuelve consecutivos los IDs de cliente posteriores al recién eliminado,
-     * corriendo cada uno una posición hacia abajo (si se borró el 2, el 3 pasa
-     * a ser 2, el 4 pasa a ser 3, etc.). Las filas de venta que referencian a
-     * los clientes movidos se actualizan solas gracias a ON UPDATE CASCADE en
-     * fk_Venta_Cliente1 (ver migraciones/001_cascade_para_renumeracion.sql).
-     * Se ejecuta en una sola transacción: si algo falla no se aplica ningún cambio,
-     * y nunca se propaga como error del borrado (es una mejora "best effort").
-     */
-    public boolean renumerarDespuesDeEliminar(int idEliminado) {
-        String sqlSeleccionar = "SELECT idCliente FROM cliente WHERE idCliente > ? ORDER BY idCliente ASC";
-        String sqlActualizar = "UPDATE cliente SET idCliente = ? WHERE idCliente = ?";
-
-        try (Connection con = getCon()) {
-            con.setAutoCommit(false);
-            try {
-                ArrayList<Integer> idsAMover = new ArrayList<>();
-                try (PreparedStatement stm = con.prepareStatement(sqlSeleccionar)) {
-                    stm.setInt(1, idEliminado);
-                    try (ResultSet rs = stm.executeQuery()) {
-                        while (rs.next()) {
-                            idsAMover.add(rs.getInt("idCliente"));
-                        }
-                    }
-                }
-
-                try (PreparedStatement stm = con.prepareStatement(sqlActualizar)) {
-                    for (int idActual : idsAMover) {
-                        stm.setInt(1, idActual - 1);
-                        stm.setInt(2, idActual);
-                        stm.executeUpdate();
-                    }
-                }
-
-                con.commit();
-            } catch (SQLException ex) {
-                con.rollback();
-                System.getLogger(Clientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-                return false;
-            } finally {
-                con.setAutoCommit(true);
+    public boolean existeRuc(String ruc) {
+        String sql = "SELECT 1 FROM cliente WHERE ruc = ?";
+        try (Connection con = getCon();
+             PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setString(1, ruc);
+            try (ResultSet rs = stm.executeQuery()) {
+                return rs.next();
             }
         } catch (SQLException ex) {
             System.getLogger(Clientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             return false;
         }
-
-        ajustarAutoIncrement();
-        return true;
     }
 
-    // Ajuste best-effort del contador AUTO_INCREMENT tras renumerar: si falla no
-    // afecta la integridad de los datos, en el peor caso el próximo ID no es el mínimo posible.
-    private void ajustarAutoIncrement() {
-        String sqlMax = "SELECT MAX(idCliente) AS maximo FROM cliente";
-        try (Connection con = getCon();
-             Statement stmSelect = con.createStatement();
-             ResultSet rs = stmSelect.executeQuery(sqlMax)) {
-            int maximo = 0;
-            if (rs.next()) {
-                maximo = rs.getInt("maximo");
-            }
-            try (Statement stmAlter = con.createStatement()) {
-                stmAlter.executeUpdate("ALTER TABLE cliente AUTO_INCREMENT = " + (maximo + 1));
-            }
-        } catch (SQLException ex) {
-            System.getLogger(Clientes.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-    }
 }

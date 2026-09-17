@@ -16,6 +16,7 @@
 	<parameter name="numeroPedido" class="java.lang.Integer"/>
 	<parameter name="fecha"        class="java.lang.String"/>
 	<parameter name="cliente"      class="java.lang.String"/>
+	<parameter name="rucCliente"   class="java.lang.String"/>
 	<parameter name="direccion"    class="java.lang.String"/>
 	<parameter name="telefono"     class="java.lang.String"/>
 	<parameter name="tipoPago"     class="java.lang.String"/>
@@ -50,14 +51,14 @@
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Dirección: ________________________________]]></text>
+				<text><![CDATA[Dirección: Calle Colón Nº 345 c/ Manduvirá, Centro, Asunción]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="10" y="58" width="340" height="28" uuid="7d462ac6-1f20-48ae-93f6-8c3a52b70f64"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Tel.: ______________________]]></text>
+				<text><![CDATA[Tel.: 021 495-873]]></text>
 			</staticText>
 
 			<!-- Timbrado / RUC / FACTURA Nº -->
@@ -70,16 +71,16 @@
 				<textElement textAlignment="Center">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[Timbrado Nº ______________
-Fecha Inicio Vigencia ___/___/______
-Fecha Fin Vigencia ___/___/______]]></text>
+				<text><![CDATA[Timbrado Nº 17563482
+Fecha Inicio Vigencia 01/01/2026
+Fecha Fin Vigencia 31/12/2027]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="370" y="32" width="180" height="15" uuid="5ea0a315-232b-41cb-afe0-5e776b1f8002"/>
 				<textElement textAlignment="Center">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[RUC: ______________]]></text>
+				<text><![CDATA[RUC: 80087345-6]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="370" y="47" width="180" height="20" uuid="5ea0a315-232b-41cb-afe0-5e776b1f8003"/>
@@ -150,6 +151,13 @@ Fecha Fin Vigencia ___/___/______]]></text>
 				</textElement>
 				<text><![CDATA[RUC o C.I.:]]></text>
 			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="55" y="125" width="210" height="13" uuid="14967591-9c96-44ac-a1d7-06c1d6f820f6"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{rucCliente}]]></textFieldExpression>
+			</textField>
 			<staticText>
 				<reportElement x="5" y="138" width="50" height="13" uuid="bd724935-b696-4961-acc1-cc845c79cd06"/>
 				<textElement>

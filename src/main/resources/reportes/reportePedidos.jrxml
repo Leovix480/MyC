@@ -26,7 +26,7 @@ SELECT
     GROUP_CONCAT(CONCAT(p.nombre, ' x', dv.cantidad) ORDER BY p.nombre SEPARATOR ', ') AS productos,
     v.totalVenta AS total
 FROM venta v
-JOIN cliente c ON v.idCliente = c.idCliente
+JOIN cliente c ON v.ruc = c.ruc
 JOIN detalle_venta dv ON v.idVenta = dv.idVenta
 JOIN producto p ON dv.idProducto = p.idProducto
 GROUP BY v.idVenta, v.fecha, c.nombre, c.apellido, v.totalVenta
