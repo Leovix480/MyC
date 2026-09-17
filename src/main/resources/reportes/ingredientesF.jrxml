@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Reporte de Ingredientes Faltantes (ingredientesF).
+
+    Consulta directamente la base de datos (sin parámetros ni JRDataSource desde
+    Java: IngredientesController.imprimir() llena este reporte con
+    JasperFillManager.fillReport(stream, parametros, conexion), igual que antes).
+
+    Un ingrediente se considera "faltante" cuando su stock actual es MENOR O IGUAL
+    a su stock mínimo (misma condición que IngredientesController.mostrarIFaltantes():
+    stock <= stockMin). La versión anterior de este reporte usaba "<" en la consulta,
+    por lo que un ingrediente con stock == stockMin aparecía en la tabla de la
+    pantalla pero no en el PDF impreso.
+-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="ingredientesF" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              uuid="a4e5c2f0-1b3d-4e6a-9c8f-2d7b6a1e0f5c">
+
+	<queryString language="sql"><![CDATA[
+SELECT
+    nombre AS Nombre,
+    stockIngredientes AS stockActual,
+    stockMinimo AS stockMin
+FROM myc.ingredientes
+WHERE myc.ingredientes.`stockIngredientes` <= myc.ingredientes.`stockMinimo`
+ORDER BY nombre ASC
+	]]></queryString>
+
+	<field name="Nombre" class="java.lang.String"/>
+	<field name="stockActual" class="java.lang.Integer"/>
+	<field name="stockMin" class="java.lang.Integer"/>
+
+	<!-- ===== Título ===== -->
+	<title>
+		<band height="90" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="8" width="555" height="14" uuid="b1000000-0000-4000-8000-000000000001"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MIEL Y CANELA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="26" width="555" height="28" forecolor="#5C3A34" uuid="b1000000-0000-4000-8000-000000000002"/>
+				<textElement textAlignment="Center">
+					<font size="17" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte de Ingredientes Faltantes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="58" width="555" height="14" uuid="b1000000-0000-4000-8000-000000000003"/>
+				<textElement textAlignment="Center">
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Generado el " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="80" width="555" height="1" forecolor="#5C3A34" uuid="b1000000-0000-4000-8000-000000000004"/>
+				<graphicElement>
+					<pen lineWidth="1.2"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+
+	<!-- ===== Encabezado de columnas ===== -->
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="26" backcolor="#5C3A34" uuid="b2000000-0000-4000-8000-000000000001">
+					<property name="net.sf.jasperreports.export.pdf.print.rectangle" value="true"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="10" y="0" width="210" height="26" forecolor="#FFFFFF" uuid="b2000000-0000-4000-8000-000000000002"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INGREDIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="0" width="115" height="26" forecolor="#FFFFFF" uuid="b2000000-0000-4000-8000-000000000003"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[STOCK ACTUAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="0" width="110" height="26" forecolor="#FFFFFF" uuid="b2000000-0000-4000-8000-000000000004"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[STOCK MÍNIMO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="445" y="0" width="110" height="26" forecolor="#FFFFFF" uuid="b2000000-0000-4000-8000-000000000005"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FALTANTE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+
+	<!-- ===== Una fila por ingrediente ===== -->
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="10" y="0" width="210" height="22" forecolor="#5C3A34" uuid="c1000000-0000-4000-8000-000000000001"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineColor="#E8A798"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Nombre}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="220" y="0" width="115" height="22" forecolor="#5C3A34" uuid="c1000000-0000-4000-8000-000000000002"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineColor="#E8A798"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{stockActual}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="335" y="0" width="110" height="22" forecolor="#5C3A34" uuid="c1000000-0000-4000-8000-000000000003"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineColor="#E8A798"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{stockMin}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="445" y="0" width="110" height="22" forecolor="#B15B45" uuid="c1000000-0000-4000-8000-000000000004"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineColor="#E8A798"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{stockMin} - $F{stockActual}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+
+	<!-- ===== Pie de página ===== -->
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="300" height="16" forecolor="#8C6B63" uuid="e1000000-0000-4000-8000-000000000001"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Miel y Canela · Sistema de gestión de stock]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="380" y="2" width="102" height="16" forecolor="#8C6B63" uuid="e1000000-0000-4000-8000-000000000002"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="486" y="2" width="69" height="16" forecolor="#8C6B63" uuid="e1000000-0000-4000-8000-000000000003"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+
+	<!-- ===== Total de ingredientes faltantes ===== -->
+	<summary>
+		<band height="40" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" forecolor="#5C3A34" uuid="d1000000-0000-4000-8000-000000000001"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="10" width="555" height="20" forecolor="#5C3A34" uuid="d1000000-0000-4000-8000-000000000002"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total de ingredientes por debajo del stock mínimo: " + $V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

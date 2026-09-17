@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Reporte General de Pedidos (reportePedidos).
+
+    Consulta directamente la base de datos (sin parámetros ni JRDataSource desde
+    Java: PedidosController.imprimir() llena este reporte con
+    JasperFillManager.fillReport(stream, parametros, conexion)).
+
+    Antes: una fila por cada producto vendido (un JOIN plano contra detalle_venta),
+    repitiendo cliente y total en cada línea de un mismo pedido.
+    Ahora: una fila por pedido (venta). Los productos de cada pedido, con su
+    cantidad, se agrupan en una sola casilla mediante GROUP_CONCAT.
+-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="reportePedidos" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              uuid="f6a3b8d0-2c5e-4a7b-9d1f-3e8c6b2a0d4f">
+
+	<queryString language="sql"><![CDATA[
+SELECT
+    v.idVenta AS idVenta,
+    v.fecha AS fecha,
+    CONCAT(c.nombre, ' ', c.apellido) AS cliente,
+    GROUP_CONCAT(CONCAT(p.nombre, ' x', dv.cantidad) ORDER BY p.nombre SEPARATOR ', ') AS productos,
+    v.totalVenta AS total
+FROM venta v
+JOIN cliente c ON v.idCliente = c.idCliente
+JOIN detalle_venta dv ON v.idVenta = dv.idVenta
+JOIN producto p ON dv.idProducto = p.idProducto
+GROUP BY v.idVenta, v.fecha, c.nombre, c.apellido, v.totalVenta
+ORDER BY v.fecha DESC, v.idVenta DESC
+	]]></queryString>
+
+	<field name="idVenta" class="java.lang.Integer"/>
+	<field name="fecha" class="java.sql.Timestamp"/>
+	<field name="cliente" class="java.lang.String"/>
+	<field name="productos" class="java.lang.String"/>
+	<field name="total" class="java.lang.Double"/>
+
+	<variable name="sumaTotal" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+
+	<!-- ===== Título ===== -->
+	<title>
+		<band height="90" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="8" width="555" height="14" uuid="b1000000-0000-4000-8000-000000000001"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MIEL Y CANELA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="26" width="555" height="28" forecolor="#5C3A34" uuid="b1000000-0000-4000-8000-000000000002"/>
+				<textElement textAlignment="Center">
+					<font size="17" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte General de Pedidos]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="58" width="555" height="14" uuid="b1000000-0000-4000-8000-000000000003"/>
+				<textElement textAlignment="Center">
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Generado el " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="80" width="555" height="1" forecolor="#5C3A34" uuid="b1000000-0000-4000-8000-000000000004"/>
+				<graphicElement>
+					<pen lineWidth="1.2"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+
+	<!-- ===== Encabezado de columnas ===== -->
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="24" backcolor="#5C3A34" uuid="b2000000-0000-4000-8000-000000000001"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="35" height="24" forecolor="#FFFFFF" uuid="b2000000-0000-4000-8000-000000000002"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="35" y="0" width="60" height="24" forecolor="#FFFFFF" uuid="b2000000-0000-4000-8000-000000000003"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="115" height="24" forecolor="#FFFFFF" uuid="b2000000-0000-4000-8000-000000000004"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="215" y="0" width="235" height="24" forecolor="#FFFFFF" uuid="b2000000-0000-4000-8000-000000000005"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRODUCTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="0" width="105" height="24" forecolor="#FFFFFF" uuid="b2000000-0000-4000-8000-000000000006"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+
+	<!-- ===== Una fila por pedido; la fila crece si la lista de productos no entra en una línea ===== -->
+	<detail>
+		<band height="24" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="35" height="24" forecolor="#5C3A34" stretchType="RelativeToTallestObject" uuid="c1000000-0000-4000-8000-000000000001"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineColor="#E8A798"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idVenta}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true" pattern="dd/MM/yyyy">
+				<reportElement x="35" y="0" width="60" height="24" forecolor="#5C3A34" stretchType="RelativeToTallestObject" uuid="c1000000-0000-4000-8000-000000000002"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineColor="#E8A798"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="0" width="115" height="24" forecolor="#5C3A34" stretchType="RelativeToTallestObject" uuid="c1000000-0000-4000-8000-000000000003"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#E8A798"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true" isStretchWithOverflow="true">
+				<reportElement x="215" y="0" width="235" height="24" forecolor="#5C3A34" positionType="Float" uuid="c1000000-0000-4000-8000-000000000004"/>
+				<box leftPadding="4" rightPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#E8A798"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productos}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true" pattern="#,##0.00">
+				<reportElement x="450" y="0" width="105" height="24" forecolor="#5C3A34" stretchType="RelativeToTallestObject" uuid="c1000000-0000-4000-8000-000000000005"/>
+				<box rightPadding="6">
+					<bottomPen lineWidth="0.5" lineColor="#E8A798"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+
+	<!-- ===== Pie de página ===== -->
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="300" height="16" forecolor="#8C6B63" uuid="e1000000-0000-4000-8000-000000000001"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Miel y Canela · Sistema de gestión de stock]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="380" y="2" width="102" height="16" forecolor="#8C6B63" uuid="e1000000-0000-4000-8000-000000000002"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="486" y="2" width="69" height="16" forecolor="#8C6B63" uuid="e1000000-0000-4000-8000-000000000003"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+
+	<!-- ===== Totales del reporte ===== -->
+	<summary>
+		<band height="46" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" forecolor="#5C3A34" uuid="d1000000-0000-4000-8000-000000000001"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="10" width="450" height="16" forecolor="#5C3A34" uuid="d1000000-0000-4000-8000-000000000002"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total de pedidos: " + $V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="26" width="450" height="16" forecolor="#5C3A34" uuid="d1000000-0000-4000-8000-000000000003"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Monto total vendido: " + new java.text.DecimalFormat("#,##0.00").format($V{sumaTotal} == null ? 0.0 : $V{sumaTotal})]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

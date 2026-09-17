@@ -127,12 +127,12 @@ public class MenuController implements Initializable {
 
     @FXML
     private void abrirRecetas(ActionEvent event) {
-        abrirFxml("recetas.fxml", "Administrar recetas :V");
+        abrirFxml("recetas.fxml", "Administrar recetas");
     }
 
     @FXML
     private void abrirIngredientes(ActionEvent event) {
-        abrirFxml("ingredientes.fxml", "Administrar Ingredientes >:D");
+        abrirFxml("ingredientes.fxml", "Administrar Ingredientes");
     }
 
     @FXML
