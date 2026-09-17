@@ -7,6 +7,7 @@ import java.sql.SQLException;
 public class Conexion {
     private String servidor;
     private String host;
+    private String puerto;
     private String usuario;
     private String contrasena;
     private Connection con;
@@ -14,6 +15,7 @@ public class Conexion {
     public Conexion() {
         this.servidor="myc";
         this.host="localhost";
+        this.puerto="3306";
         this.usuario="root";
         this.contrasena="";
     }
@@ -21,6 +23,15 @@ public class Conexion {
     public Conexion(String servidor, String host, String usuario, String contrasena) {
         this.servidor = servidor;
         this.host = host;
+        this.puerto = "3306";
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+    }
+
+    public Conexion(String servidor, String host, String puerto, String usuario, String contrasena) {
+        this.servidor = servidor;
+        this.host = host;
+        this.puerto = puerto;
         this.usuario = usuario;
         this.contrasena = contrasena;
     }
@@ -58,7 +69,7 @@ public class Conexion {
     }
 
     public Connection getCon() {
-        String url="jdbc:mysql://"+host+"/"+servidor;
+        String url="jdbc:mysql://"+host+":"+puerto+"/"+servidor;
         try {
             this.con=DriverManager.getConnection(url, usuario, contrasena);
         } catch (SQLException ex) {
