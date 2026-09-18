@@ -10,8 +10,12 @@
      #FFF6F3  fondo de los paneles ("cards")
      #F4C6B8  botones normales / base de tablas
      #E8A798  bordes
-     #D98572  botones de acento / selección
      #5C3A34  texto
+
+     Marrones (botones de acento y tablas):
+     #7A4B32  botones de acento (Factura, Imprimir, Cerrar sesión, etc.)
+     #5C3620  borde de los botones de acento
+     #5A3A2E  base de tabla (color raíz de la app)
    ===================================================================== */
 
 /* ---------- Raíz de cada vista ---------- */
@@ -64,8 +68,8 @@
 
 /* Botón de acento (Eliminar, Agregar, Aceptar, Cerrar sesión, Imprimir) */
 .boton-acento {
-    -fx-background-color: #D98572;
-    -fx-border-color: #5C3A34;
+    -fx-background-color: #7A4B32;
+    -fx-border-color: #5C3620;
     -fx-border-width: 1;
     -fx-background-radius: 8;
     -fx-border-radius: 8;
@@ -124,11 +128,11 @@
 
 /* ---------- Tablas ---------- */
 .tabla {
-    -fx-control-inner-background: #FFF6F3;
-    -fx-control-inner-background-alt: -fx-control-inner-background;
-    -fx-base: #F4C6B8;
-    -fx-accent: #D98572;
-    -fx-selection-bar: #F4C6B8;
-    -fx-table-cell-border-color: #E8A798;
-    -fx-box-border: #E8A798;
+    -fx-control-inner-background: #F3E7DA;
+    -fx-control-inner-background-alt: #E8D5C0;
+    -fx-base: #5A3A2E;
+    -fx-accent: #C9AD8F;
+    -fx-selection-bar: #C9AD8F;
+    -fx-table-cell-border-color: #D8C1A6;
+    -fx-box-border: #D8C1A6;
 }

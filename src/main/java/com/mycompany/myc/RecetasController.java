@@ -116,6 +116,10 @@ public class RecetasController implements Initializable {
     }
 
     public void abrirFxml(String formulario, String titulo) {
+        abrirFxml(formulario, titulo, true);
+    }
+
+    public void abrirFxml(String formulario, String titulo, boolean redimensionable) {
         FXMLLoader loader=new FXMLLoader(getClass().getResource(formulario));
         try {
             Parent root=loader.load();
@@ -123,11 +127,14 @@ public class RecetasController implements Initializable {
             stage.setTitle(titulo);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
-            // La ventana puede agrandarse, pero nunca achicarse por debajo del tamaño inicial de la vista
-            stage.setOnShown(e -> {
-                stage.setMinWidth(stage.getWidth());
-                stage.setMinHeight(stage.getHeight());
-            });
+            stage.setResizable(redimensionable);
+            if (redimensionable) {
+                // La ventana puede agrandarse, pero nunca achicarse por debajo del tamaño inicial de la vista
+                stage.setOnShown(e -> {
+                    stage.setMinWidth(stage.getWidth());
+                    stage.setMinHeight(stage.getHeight());
+                });
+            }
             stage.showAndWait();
         } catch (IOException ex) {
             System.getLogger(RecetasController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -234,6 +241,7 @@ public class RecetasController implements Initializable {
         btnAdd.setDisable(false);
         btnEditar.setDisable(true);
         btnElimnar.setDisable(true);
+        txtPrecio.setDisable(true);
     }
 
     @FXML
@@ -411,7 +419,7 @@ public class RecetasController implements Initializable {
             return;
         }
         ventasSingleton.getInstance().setCodReceta(id);
-        abrirFxml("cargar_ingredientes_receta.fxml", "administrar ingredientes receta");
+        abrirFxml("cargar_ingredientes_receta.fxml", "administrar ingredientes receta",false);
         mostrarDI();
     }
 
