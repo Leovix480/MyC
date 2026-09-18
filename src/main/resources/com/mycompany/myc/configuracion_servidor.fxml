@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="root" minHeight="330.0" minWidth="420.0" prefHeight="330.0" prefWidth="420.0" styleClass="raiz" stylesheets="@estilos.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.myc.ConfiguracionServidorController">
+   <children>
+      <VBox spacing="12.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <padding>
+            <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+         </padding>
+         <children>
+
+            <Label styleClass="etiqueta-titulo" text="Datos de conexion al servidor" />
+
+            <GridPane hgap="10.0" styleClass="card" vgap="12.0" VBox.vgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+               </padding>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="NEVER" minWidth="90.0" />
+                  <ColumnConstraints hgrow="ALWAYS" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="26.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="26.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="26.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="26.0" vgrow="NEVER" />
+                  <RowConstraints minHeight="26.0" vgrow="NEVER" />
+               </rowConstraints>
+               <children>
+                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Base de datos:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                  <TextField fx:id="txtServidor" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Host:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                  <TextField fx:id="txtHost" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Puerto:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                  <TextField fx:id="txtPuerto" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Usuario:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                  <TextField fx:id="txtUsuario" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                  <Label minWidth="-Infinity" styleClass="etiqueta" text="Contrasena:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                  <PasswordField fx:id="txtContrasena" maxWidth="Infinity" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+               </children>
+            </GridPane>
+
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+               <children>
+                  <Button fx:id="btnCancelar" minWidth="96.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="30.0" prefWidth="96.0" styleClass="boton" text="Cancelar" />
+                  <Button fx:id="btnGuardar" minWidth="96.0" mnemonicParsing="false" onAction="#guardar" prefHeight="30.0" prefWidth="96.0" styleClass="boton-acento" text="Guardar" />
+               </children>
+            </HBox>
+
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

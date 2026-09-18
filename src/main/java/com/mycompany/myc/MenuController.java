@@ -24,12 +24,25 @@ import javafx.scene.Scene;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MenuController implements Initializable {
 
+    // Codigo Konami: arriba arriba abajo abajo izquierda derecha izquierda derecha b a enter
+    private static final KeyCode[] CODIGO_KONAMI = {
+        KeyCode.UP, KeyCode.UP, KeyCode.DOWN, KeyCode.DOWN,
+        KeyCode.LEFT, KeyCode.RIGHT, KeyCode.LEFT, KeyCode.RIGHT,
+        KeyCode.B, KeyCode.A, KeyCode.ENTER
+    };
+    private int progresoKonami = 0;
+
+    @FXML
+    private AnchorPane root;
     @FXML
     private Button btnPedidos;
     @FXML
@@ -57,7 +70,41 @@ public class MenuController implements Initializable {
         btnIngredientes.setCursor(Cursor.HAND);
         btnCerrar.setCursor(Cursor.HAND);
         actualizarAlertaStock();
-    }    
+
+        root.sceneProperty().addListener((obs, escenaVieja, escenaNueva) -> {
+            if (escenaNueva != null) {
+                escenaNueva.addEventFilter(KeyEvent.KEY_PRESSED, this::detectarCodigoKonami);
+            }
+        });
+    }
+
+    private void detectarCodigoKonami(KeyEvent event) {
+        // Evita que estas teclas disparen el comportamiento normal (ej. Enter
+        // activando el boton enfocado, como "Cerrar sesion") mientras se esta
+        // tipeando el codigo, aunque la secuencia se corte o este mal.
+        boolean esTeclaDelCodigo = false;
+        for (KeyCode tecla : CODIGO_KONAMI) {
+            if (event.getCode() == tecla) {
+                esTeclaDelCodigo = true;
+                break;
+            }
+        }
+        if (!esTeclaDelCodigo) {
+            return;
+        }
+        event.consume();
+
+        if (event.getCode() == CODIGO_KONAMI[progresoKonami]) {
+            progresoKonami++;
+            if (progresoKonami == CODIGO_KONAMI.length) {
+                progresoKonami = 0;
+                abrirFxml("configuracion_servidor.fxml", "Configuracion del servidor");
+            }
+        } else {
+            // Si la tecla fallida es igual al primer paso, arranca de nuevo desde ahi
+            progresoKonami = (event.getCode() == CODIGO_KONAMI[0]) ? 1 : 0;
+        }
+    }
 
     // Alerta de stock mínimo: mismo criterio que la tabla de faltantes de la vista Ingredientes (stock <= stockMin)
     public void actualizarAlertaStock() {

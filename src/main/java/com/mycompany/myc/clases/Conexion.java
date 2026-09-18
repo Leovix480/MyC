@@ -13,11 +13,11 @@ public class Conexion {
     private Connection con;
 
     public Conexion() {
-        this.servidor="myc";
-        this.host="localhost";
-        this.puerto="3306";
-        this.usuario="root";
-        this.contrasena="";
+        this.servidor = ConfigServidor.getServidor();
+        this.host = ConfigServidor.getHost();
+        this.puerto = ConfigServidor.getPuerto();
+        this.usuario = ConfigServidor.getUsuario();
+        this.contrasena = ConfigServidor.getContrasena();
     }
 
     public Conexion(String servidor, String host, String usuario, String contrasena) {

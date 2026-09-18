@@ -20,7 +20,7 @@ public class MyC extends Application{
     //hola leo
     @Override
     public void start(Stage stage) throws Exception {
-        Conexion conectar= new Conexion("myc", "186.17.107.54", "33063", "root", "m4MYC_601v904");
+        Conexion conectar= new Conexion();
         if(conectar.getCon() != null){
             escena = new Scene(loadFXML("menu"), 650, 500);
             stage.setScene(escena);
