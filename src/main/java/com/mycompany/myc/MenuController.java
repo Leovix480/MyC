@@ -98,7 +98,7 @@ public class MenuController implements Initializable {
             progresoKonami++;
             if (progresoKonami == CODIGO_KONAMI.length) {
                 progresoKonami = 0;
-                abrirFxml("configuracion_servidor.fxml", "Configuracion del servidor");
+                abrirFxml("configuracion_servidor.fxml", "Configuracion del servidor", false);
             }
         } else {
             // Si la tecla fallida es igual al primer paso, arranca de nuevo desde ahi
@@ -134,6 +134,10 @@ public class MenuController implements Initializable {
     }
     
     public void abrirFxml(String formulario, String titulo) {
+        abrirFxml(formulario, titulo, true);
+    }
+
+    public void abrirFxml(String formulario, String titulo, boolean redimensionable) {
         FXMLLoader loader=new FXMLLoader(getClass().getResource(formulario));
         try {
             Parent root=loader.load();
@@ -141,11 +145,14 @@ public class MenuController implements Initializable {
             stage.setTitle(titulo);
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
-            // La ventana puede agrandarse, pero nunca achicarse por debajo del tamaño inicial de la vista
-            stage.setOnShown(e -> {
-                stage.setMinWidth(stage.getWidth());
-                stage.setMinHeight(stage.getHeight());
-            });
+            stage.setResizable(redimensionable);
+            if (redimensionable) {
+                // La ventana puede agrandarse, pero nunca achicarse por debajo del tamaño inicial de la vista
+                stage.setOnShown(e -> {
+                    stage.setMinWidth(stage.getWidth());
+                    stage.setMinHeight(stage.getHeight());
+                });
+            }
             stage.showAndWait();
             // Al cerrar la ventana modal se vuelve al menú: refrescar la alerta por si cambió el stock
             actualizarAlertaStock();
