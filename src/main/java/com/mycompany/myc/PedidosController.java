@@ -6,6 +6,7 @@ import com.mycompany.modelos.DetalleVenta;
 import com.mycompany.modelos.Ingredientes;
 import com.mycompany.modelos.Productos;
 import com.mycompany.modelos.Venta;
+import com.mycompany.myc.clases.Conexion;
 import com.mycompany.myc.clases.ventasSingleton;
 
 import java.io.IOException;
@@ -175,7 +176,7 @@ public class PedidosController implements Initializable {
         txtNombreCliente.clear();
         datosDetalle.clear();
         txtTotal.setText("");
-        lblTotalIva.setText("c/IVA 10%: ");
+        lblTotalIva.setText("Total guardado (IVA 10% incluido): ");
     }
     
     //  Tabla superior (ventas realizadas) 
@@ -254,8 +255,9 @@ public class PedidosController implements Initializable {
         }
         tablaDetalle.setItems(datosDetalle);
         actualizarTotal();
-        
-        btnEditar.setDisable(false);
+
+        // No hay una función que edite un pedido ya guardado (cliente/fecha/pago/productos):
+        // solo se puede eliminar y volver a cargarlo. btnEditar se deja deshabilitado a propósito.
         btnEliminar.setDisable(false);
         btnCancelar.setDisable(false);
     }
@@ -471,6 +473,7 @@ public class PedidosController implements Initializable {
             mostrarAlerta("Venta eliminada correctamente.");
             mostrarVentas();
             limpiarVentaActual();
+            deshabilitar();
         } else {
             mostrarAlerta("No se pudo eliminar la venta.");
         }
@@ -482,7 +485,7 @@ public class PedidosController implements Initializable {
             total += p.getPrecio() * cantidadPorProducto.getOrDefault(p.getIdProducto(), 0);
         }
         txtTotal.setText(String.valueOf(total));
-        lblTotalIva.setText("c/IVA 10%: " + String.valueOf(redondear2(total + calcularIvaActual())));
+        lblTotalIva.setText("Total guardado (IVA 10% incluido): " + String.valueOf(redondear2(total + calcularIvaActual())));
     }
 
     // IVA de un importe, redondeado a 2 decimales
@@ -580,7 +583,9 @@ public class PedidosController implements Initializable {
         venta.setFecha(dpFecha.getValue().atStartOfDay());
         venta.setRuc(rucClienteSeleccionado);
         venta.setTipoPago(tipoPago);
-        venta.setTotalVenta(calcularTotalActual());
+        // Se guarda el total CON IVA incluido (igual que el que ve el cliente en la factura),
+        // así el reporte general de Pedidos y la factura de una misma venta siempre coinciden.
+        venta.setTotalVenta(redondear2(calcularTotalActual() + calcularIvaActual()));
 
         if (!venta.insertar()) {
             mostrarAlerta("No se pudo guardar la venta.");
@@ -619,6 +624,13 @@ public class PedidosController implements Initializable {
         return total;
     }
 
+    // LIMITACIÓN CONOCIDA: acumularRequerimiento() (y por lo tanto descontarIngredientes() y
+    // restituirIngredientes() más abajo) usa siempre la receta ACTUAL de cada producto, porque no se
+    // guarda una foto de qué ingredientes se consumieron realmente en cada venta. Si una receta cambia
+    // después de haberse vendido un producto, eliminar esa venta vieja restituye stock según la receta
+    // de HOY, no la que tenía el producto el día de la venta. Corregirlo de raíz implica registrar el
+    // detalle de ingredientes consumidos por cada detalle_venta (cambio de esquema en ambos servidores),
+    // que se dejó pendiente a propósito por ahora.
     private void descontarIngredientes() {
         Map<Integer, Double> requeridoPorIngrediente = new HashMap<>();
         for (Productos p : datosDetalle) {
@@ -710,22 +722,27 @@ public class PedidosController implements Initializable {
                 throw new java.io.FileNotFoundException("No se encontró el archivo en: " + rutaReporte);
             }
 
-            // 2. Establecer la conexión física a tu Base de Datos SQL (Reemplaza con tus credenciales)
-            java.sql.Connection conexion = java.sql.DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/myc", "root", "");
+            // 2. Usar la misma conexión configurada para el resto de la app (respeta el
+            // servidor/host actual elegido en Configuración del servidor, sea local o remoto)
+            java.sql.Connection conexion = new Conexion().getCon();
+            if (conexion == null) {
+                throw new java.sql.SQLException("No se pudo establecer conexión con la base de datos.");
+            }
 
             // Mapa de parámetros vacío porque imprime todos los pedidos
             Map<String, Object> parametros = new HashMap<>();
 
-            // 3. Llenar el reporte
-            net.sf.jasperreports.engine.JasperPrint jasperPrint = net.sf.jasperreports.engine.JasperFillManager.fillReport(streamReporte, parametros, conexion);
+            try {
+                // 3. Llenar el reporte
+                net.sf.jasperreports.engine.JasperPrint jasperPrint = net.sf.jasperreports.engine.JasperFillManager.fillReport(streamReporte, parametros, conexion);
 
-            // 4. Abrir el visor en pantalla
-            net.sf.jasperreports.view.JasperViewer visor = new net.sf.jasperreports.view.JasperViewer(jasperPrint, false);
-            visor.setTitle("Reporte General de Pedidos");
-            visor.setVisible(true);
-
-            conexion.close();
+                // 4. Abrir el visor en pantalla
+                net.sf.jasperreports.view.JasperViewer visor = new net.sf.jasperreports.view.JasperViewer(jasperPrint, false);
+                visor.setTitle("Reporte General de Pedidos");
+                visor.setVisible(true);
+            } finally {
+                conexion.close();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

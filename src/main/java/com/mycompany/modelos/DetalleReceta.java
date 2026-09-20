@@ -21,12 +21,12 @@ public class DetalleReceta extends Conexion implements Sentencias {
 
     private int idReceta;
     private int idIngredientes;
-    private double cantUso;
+    private int cantUso;
 
     public DetalleReceta() {
     }
 
-    public DetalleReceta(int idReceta, int idIngredientes, double cantUso) {
+    public DetalleReceta(int idReceta, int idIngredientes, int cantUso) {
         this.idReceta = idReceta;
         this.idIngredientes = idIngredientes;
         this.cantUso = cantUso;
@@ -48,11 +48,11 @@ public class DetalleReceta extends Conexion implements Sentencias {
         this.idIngredientes = idIngrediente;
     }
 
-    public double getCantUso() {
+    public int getCantUso() {
         return cantUso;
     }
 
-    public void setCantUso(double cantUso) {
+    public void setCantUso(int cantUso) {
         this.cantUso = cantUso;
     }
 
@@ -63,7 +63,7 @@ public class DetalleReceta extends Conexion implements Sentencias {
              PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setInt(1, this.idReceta);
             stm.setInt(2, this.idIngredientes);
-            stm.setDouble(3, this.cantUso);
+            stm.setInt(3, this.cantUso);
             stm.executeUpdate();
             return true;
         } catch (SQLException ex) {
@@ -77,7 +77,7 @@ public class DetalleReceta extends Conexion implements Sentencias {
         String sql = "UPDATE detalle_receta SET cantUso=? WHERE idRecetas=? AND idIngredientes=?";
         try (Connection con = getCon();
              PreparedStatement stm = con.prepareStatement(sql)) {
-            stm.setDouble(1, this.cantUso);
+            stm.setInt(1, this.cantUso);
             stm.setInt(2, this.idReceta);
             stm.setInt(3, this.idIngredientes);
             int filas = stm.executeUpdate();
@@ -113,7 +113,7 @@ public class DetalleReceta extends Conexion implements Sentencias {
             while (rs.next()) {
                 int idRec = rs.getInt("idRecetas");
                 int idIng = rs.getInt("idIngredientes");
-                double cant = rs.getDouble("cantUso");
+                int cant = rs.getInt("cantUso");
                 DetalleReceta detalle = new DetalleReceta(idRec, idIng, cant);
                 detalles.add(detalle);
             }
@@ -151,7 +151,7 @@ public class DetalleReceta extends Conexion implements Sentencias {
                 while (rs.next()) {
                     int idRec = rs.getInt("idRecetas");
                     int idIng = rs.getInt("idIngredientes");
-                    double cant = rs.getDouble("cantUso");
+                    int cant = rs.getInt("cantUso");
                     detalles.add(new DetalleReceta(idRec, idIng, cant));
                 }
             }

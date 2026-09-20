@@ -139,7 +139,7 @@
                               <TextField fx:id="txtTotal" disable="true" minWidth="96.0" prefHeight="30.0" prefWidth="96.0" styleClass="campo, campo-negrita" />
                            </children>
                         </HBox>
-                        <Label fx:id="lblTotalIva" alignment="CENTER_RIGHT" styleClass="etiqueta-secundaria" text="c/IVA 10%: " />
+                        <Label fx:id="lblTotalIva" alignment="CENTER_RIGHT" styleClass="etiqueta-secundaria" text="Total guardado (IVA 10% incluido): " />
                      </children>
                   </VBox>
                </children>

@@ -137,6 +137,12 @@ public class RecetasController implements Initializable {
 
     @FXML
     private void add(ActionEvent event) {
+        limpiar();
+        id = 0;
+        codReceta = 0;
+        idIngredienteDI = 0;
+        btnDIEliminar.setDisable(true);
+        ventasSingleton.getInstance().setCodProducto(0);
         habilitar();
         btnElimnar.setDisable(true);
         btnEditar.setDisable(true);
@@ -215,7 +221,10 @@ public class RecetasController implements Initializable {
             limpiar();
             cancelar(event);
         } else {
-            mostrarAlerta("No se pudo guardar el producto asociado a la receta.");
+            // No dejar una receta huérfana (sin producto asociado, invendible): se deshace el insert anterior.
+            receta.eliminar();
+            mostrarDatos();
+            mostrarAlerta("No se pudo guardar el producto asociado a la receta. Se deshizo la receta.");
         }
     }
 
@@ -246,7 +255,6 @@ public class RecetasController implements Initializable {
         codReceta = ventasSingleton.getInstance().getCodReceta();
         id = r.getIdRecetas();
 
-        ArrayList<Recetas> lista = r.consulta();
         for (Recetas rec : datos) {
             if (rec.getIdRecetas() == codReceta) {
                 System.out.println("Encontrado");
@@ -318,6 +326,15 @@ public class RecetasController implements Initializable {
             return;
         }
 
+        // Valores anteriores, por si hay que revertir la receta ante un fallo al editar el producto asociado
+        Recetas anterior = null;
+        for (Recetas rec : datos) {
+            if (rec.getIdRecetas() == id) {
+                anterior = rec;
+                break;
+            }
+        }
+
         String nom = Textos.capitalizarInicial(txtNombre.getText());
         String desc = txtDesc.getText().trim();
         double pre = Double.parseDouble(txtPrecio.getText());
@@ -341,7 +358,14 @@ public class RecetasController implements Initializable {
             if (producto.editar()) {
                 System.out.println("Producto editado correctamente.");
             } else {
-                mostrarAlerta("No se pudo editar el producto asociado.");
+                // No dejar la receta desincronizada del producto: se revierte a los valores anteriores.
+                if (anterior != null) {
+                    receta.setNombre(anterior.getNombre());
+                    receta.setDescripcion(anterior.getDescripcion());
+                    receta.setIdRecetas(id);
+                    receta.editar();
+                }
+                mostrarAlerta("No se pudo editar el producto asociado. Se revirtió el cambio en la receta.");
             }
         }
 

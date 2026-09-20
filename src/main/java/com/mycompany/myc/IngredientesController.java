@@ -1,10 +1,10 @@
 package com.mycompany.myc;
 
 import com.mycompany.modelos.Ingredientes;
+import com.mycompany.myc.clases.Conexion;
 import com.mycompany.myc.clases.Textos;
 import com.mycompany.myc.clases.ventasSingleton;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -253,10 +253,10 @@ public class IngredientesController implements Initializable {
             mostrarIFaltantes();
             limpiar();
             cancelar(event);
+            id = -1;
         } else {
             mostrarAlerta("No se pudo eliminar el ingrediente.");
         }
-        id = -1;
     }
 
     @FXML
@@ -275,6 +275,8 @@ public class IngredientesController implements Initializable {
 
     @FXML
     private void add(ActionEvent event) {
+        limpiar();
+        id = -1;
         habilitar();
         btnEliminar.setDisable(true);
         btnEditar.setDisable(true);
@@ -303,24 +305,22 @@ public class IngredientesController implements Initializable {
     @FXML
     private void mostrarFila(MouseEvent event) {
         Ingredientes i = tablaIngredientes.getSelectionModel().getSelectedItem();
+        if (i == null) {
+            return;
+        }
         ventasSingleton.getInstance().setCodIngrediente(i.getIdIngredientes());
         codIngredientes = ventasSingleton.getInstance().getCodIngrediente();
         id = i.getIdIngredientes();
-        ArrayList<Ingredientes> lista = i.consulta();
-        for (Ingredientes ingrediente : lista) {
-            if (ingrediente.getIdIngredientes() == codIngredientes) {
-                System.out.println("Encontrado");
-                txtNombre.setText(ingrediente.getNombre());
-                txtPrecio.setText(String.valueOf(ingrediente.getPrecio()));
-                txtStock.setText(String.valueOf(ingrediente.getStock()));
-                txtStockMin.setText(String.valueOf(ingrediente.getStockMin()));
-                habilitar();
-                btnEditar.setDisable(false);
-                btnEliminar.setDisable(false);
-                btnCancelar.setDisable(false);
-                btnAdd.setDisable(true);
-            }
-        }
+
+        txtNombre.setText(i.getNombre());
+        txtPrecio.setText(String.valueOf(i.getPrecio()));
+        txtStock.setText(String.valueOf(i.getStock()));
+        txtStockMin.setText(String.valueOf(i.getStockMin()));
+        habilitar();
+        btnEditar.setDisable(false);
+        btnEliminar.setDisable(false);
+        btnCancelar.setDisable(false);
+        btnAdd.setDisable(true);
     }
 
     @FXML
@@ -334,22 +334,27 @@ public class IngredientesController implements Initializable {
                     throw new java.io.FileNotFoundException("No se encontró el archivo en: " + rutaReporte);
                 }
 
-                // 2. Establecer la conexión física a tu Base de Datos SQL (Reemplaza con tus credenciales)
-                java.sql.Connection conexion = java.sql.DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/myc", "root", "");
+                // 2. Usar la misma conexión configurada para el resto de la app (respeta el
+                // servidor/host actual elegido en Configuración del servidor, sea local o remoto)
+                java.sql.Connection conexion = new Conexion().getCon();
+                if (conexion == null) {
+                    throw new java.sql.SQLException("No se pudo establecer conexión con la base de datos.");
+                }
 
                 // Mapa de parámetros vacío porque imprime todos los pedidos
                 Map<String, Object> parametros = new HashMap<>();
 
-                // 3. Llenar el reporte
-                net.sf.jasperreports.engine.JasperPrint jasperPrint = net.sf.jasperreports.engine.JasperFillManager.fillReport(streamReporte, parametros, conexion);
+                try {
+                    // 3. Llenar el reporte
+                    net.sf.jasperreports.engine.JasperPrint jasperPrint = net.sf.jasperreports.engine.JasperFillManager.fillReport(streamReporte, parametros, conexion);
 
-                // 4. Abrir el visor en pantalla
-                net.sf.jasperreports.view.JasperViewer visor = new net.sf.jasperreports.view.JasperViewer(jasperPrint, false);
-                visor.setTitle("Reporte de Ingredientes Faltantes");
-                visor.setVisible(true);
-
-                conexion.close();
+                    // 4. Abrir el visor en pantalla
+                    net.sf.jasperreports.view.JasperViewer visor = new net.sf.jasperreports.view.JasperViewer(jasperPrint, false);
+                    visor.setTitle("Reporte de Ingredientes Faltantes");
+                    visor.setVisible(true);
+                } finally {
+                    conexion.close();
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();

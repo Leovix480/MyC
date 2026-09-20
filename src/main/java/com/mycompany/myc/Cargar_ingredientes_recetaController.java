@@ -133,7 +133,7 @@ public class Cargar_ingredientes_recetaController implements Initializable {
             return;
         }
 
-        double cant = Double.parseDouble(txtCantidad.getText());
+        int cant = Integer.parseInt(txtCantidad.getText());
         detalle.setIdReceta(idReceta);
         detalle.setIdIngrediente(idIngredienteSeleccionado);
         detalle.setCantUso(cant);
@@ -181,13 +181,13 @@ public class Cargar_ingredientes_recetaController implements Initializable {
             return false;
         }
         try {
-            double cant = Double.parseDouble(texto);
+            int cant = Integer.parseInt(texto);
             if (cant <= 0) {
                 mostrarAlerta("La cantidad debe ser mayor a 0.");
                 return false;
             }
         } catch (NumberFormatException ex) {
-            mostrarAlerta("La cantidad debe ser un número válido.");
+            mostrarAlerta("La cantidad debe ser un número entero válido.");
             return false;
         }
         return true;

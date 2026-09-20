@@ -1,4 +1,4 @@
-package com.mycompany.myc.clases;
+ package com.mycompany.myc.clases;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

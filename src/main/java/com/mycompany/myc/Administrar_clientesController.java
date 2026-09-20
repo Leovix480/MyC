@@ -8,7 +8,6 @@ import com.mycompany.modelos.Clientes;
 import com.mycompany.myc.clases.Textos;
 import com.mycompany.myc.clases.ventasSingleton;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -107,6 +106,7 @@ public class Administrar_clientesController implements Initializable {
 
     @FXML
     private void add(ActionEvent event) {
+        limpiar();
         rucSeleccionado = null;
         habilitar();
         btnEliminar.setDisable(true);
@@ -233,21 +233,16 @@ public class Administrar_clientesController implements Initializable {
         ventasSingleton.getInstance().setRucCliente(c.getRuc());
         rucSeleccionado=ventasSingleton.getInstance().getRucCliente();
 
-        ArrayList<Clientes> lista=c.consulta();
-        for(Clientes cliente : lista){
-            if(cliente.getRuc().equals(rucSeleccionado)){
-                txtRuc.setText(cliente.getRuc());
-                txtNombre.setText(cliente.getNombre());
-                txtApellido.setText(cliente.getApellido());
-                txtDireccion.setText(cliente.getDireccion());
-                txtCelular.setText(cliente.getTelefono());
-                habilitar();
-                btnEditar.setDisable(false);
-                btnEliminar.setDisable(false);
-                btnCancelar.setDisable(false);
-                btnAdd.setDisable(true);
-            }
-        }
+        txtRuc.setText(c.getRuc());
+        txtNombre.setText(c.getNombre());
+        txtApellido.setText(c.getApellido());
+        txtDireccion.setText(c.getDireccion());
+        txtCelular.setText(c.getTelefono());
+        habilitar();
+        btnEditar.setDisable(false);
+        btnEliminar.setDisable(false);
+        btnCancelar.setDisable(false);
+        btnAdd.setDisable(true);
     }
 
     @FXML

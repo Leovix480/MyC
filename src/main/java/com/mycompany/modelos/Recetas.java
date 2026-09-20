@@ -151,11 +151,15 @@ public class Recetas extends Conexion implements Sentencias {
                     }
                 }
 
+                // Se compacta a partir de idEliminado (no simplemente "idActual - 1"), para que también
+                // se cierren los huecos que ya existieran por encima del id borrado.
                 try (PreparedStatement stm = con.prepareStatement(sqlActualizar)) {
+                    int nuevoId = idEliminado;
                     for (int idActual : idsAMover) {
-                        stm.setInt(1, idActual - 1);
+                        stm.setInt(1, nuevoId);
                         stm.setInt(2, idActual);
                         stm.executeUpdate();
+                        nuevoId++;
                     }
                 }
 
